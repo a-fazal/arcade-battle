@@ -4,12 +4,17 @@ import { faGamepad } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./App.css";
 import UserMain from "./UserMain";
+import Trophy from "./Trophy";
+import { BrowserRouter as Router, Route, Link, HashRouter, Switch  } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
+        <Router>
+        <div>
         <nav className="navbar navbar-expand-lg">
           <a className="navbar-brand" href="#">
             ARCADE<i className="fas fa-gamepad icon-gradient" />BATTLE
@@ -29,7 +34,8 @@ class App extends Component {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto" />
 
-            <i className="fas fa-trophy icon-header" />
+            <Link to="/trophy"><i className="fas fa-trophy icon-header" /></Link>
+
             <img className="avatar-header" src={avatar} />
             <span>
               Sophia77<i className="fas fa-chevron-down" />
@@ -63,9 +69,16 @@ class App extends Component {
             </div>
           </div>
           <div className="col-sm-9" id="main">
-            <UserMain />
+
+            <div>
+            <Route exact path="/" component={UserMain} />
+            <Route exact path="/trophy" component={Trophy} />
+            </div>
+
           </div>
         </div>
+        </div>
+        </Router>
       </div>
     );
   }
