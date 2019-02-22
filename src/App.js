@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./App.css";
 import UserMain from "./UserMain";
 import Trophy from "./Trophy";
+import TicTacToe from "./TicTacToe";
 import { BrowserRouter as Router, Route, Link, HashRouter, Switch  } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 
@@ -16,9 +17,11 @@ class App extends Component {
         <Router>
         <div>
         <nav className="navbar navbar-expand-lg">
-          <a className="navbar-brand" href="#">
+        <Link to="/">
+          <div className="navbar-brand">
             ARCADE<i className="fas fa-gamepad icon-gradient" />BATTLE
-          </a>
+          </div>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -49,6 +52,7 @@ class App extends Component {
               <h3>GAMES</h3>
               <br />
               <div className="sidebaritem">
+              <Link to="/tictactoe">
                 <i className="far fa-times-circle tictactoe-icon" />
                 <div>
                   Tic Tac Toe
@@ -57,6 +61,7 @@ class App extends Component {
                     Play the classic 2 player game!
                   </span>
                 </div>
+                </Link>
               </div>
               <div className="sidebaritem">
                 <i className="fas fa-chess-board checkers-icon" />
@@ -73,6 +78,7 @@ class App extends Component {
             <div>
             <Route exact path="/" component={UserMain} />
             <Route exact path="/trophy" component={Trophy} />
+            <Route exact path="/tictactoe" component={TicTacToe} />
             </div>
 
           </div>
