@@ -5,7 +5,7 @@ class Trophy extends Component {
 
     return (
       <div>
-      Hello
+      Trophies
       </div>
     );
   }

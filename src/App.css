@@ -16,6 +16,7 @@ body {
 }
 .navbar {
   height: 50px;
+	z-index: 10;
 }
 .navbar a {
 	color: white;

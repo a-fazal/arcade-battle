@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import avatar from "./avatar.jpeg";
-import { faGamepad } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./App.css";
 import UserMain from "./UserMain";
 import Trophy from "./Trophy";
 import TicTacToe from "./TicTacToe";
-import { BrowserRouter as Router, Route, Link, HashRouter, Switch  } from "react-router-dom";
-import { Doughnut } from "react-chartjs-2";
+import { BrowserRouter as Router, Route, Link, Switch  } from "react-router-dom";
 
 class App extends Component {
 
