@@ -47,7 +47,7 @@ class Login extends Component {
         <input type="password" className="form-control" id="passwordInput" placeholder="Enter password" />
       </div>
       </form>
-      <button type="button" class="btn btn-primary" id="loginButton" onClick={this.handleClick}>Login</button>
+      <button type="button" className="btn btn-primary" id="loginButton" onClick={this.handleClick}>Login</button>
 
       </div>
       </div>

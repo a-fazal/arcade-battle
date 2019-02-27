@@ -4,9 +4,18 @@ import "./App.css";
 import UserMain from "./UserMain";
 import Trophy from "./Trophy";
 import TicTacToe from "./TicTacToe";
-import { BrowserRouter as Router, Route, Link, Switch  } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, withRouter  } from "react-router-dom";
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
+  }
+
+  redirectToLogin(e) {
+    e.preventDefault()
+    this.props.history.push('/');
+  }
 
   render() {
     return (
@@ -39,10 +48,20 @@ class Home extends Component {
 
             <Link to="/trophy"><i className="fas fa-trophy icon-header" /></Link>
 
-            <img className="avatar-header" src={avatar} />
-            <span>
-              {this.props.user}<i className="fas fa-chevron-down" />
-            </span>
+            <div className="dropdown">
+  <div id="profileMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <img className="avatar-header" src={avatar} />
+  <span>
+    {this.props.user}<i className="fas fa-chevron-down" />
+  </span>
+  </div>
+  <div className="dropdown-menu dropdown-menu-right" aria-labelledby="profileMenu">
+    <ul>
+    <li>Profile</li>
+    <Link to="/" onClick={this.redirectToLogin}><li>Logout</li></Link>
+    </ul>
+  </div>
+</div>
           </div>
         </nav>
 
@@ -75,11 +94,11 @@ class Home extends Component {
           </div>
           <div className="col-sm-9" id="main">
 
-            <div>
+            <Switch>
             <Route exact path="/home" render={() => <UserMain user={this.props.user} />} />
             <Route exact path="/trophy" render={() => <Trophy user={this.props.user} />} />
             <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
-            </div>
+            </Switch>
 
           </div>
         </div>
@@ -92,4 +111,4 @@ class Home extends Component {
 
 }
 
-export default Home;
+export default withRouter(Home);

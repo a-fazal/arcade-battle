@@ -28,6 +28,8 @@ class App extends Component {
         <Switch>
             <Route exact path="/" render={() => <Login setUser={this.setUser} />} />
             <Route exact path="/home" render={() => <Home user={this.state.user} />} />
+            <Route exact path="/tictactoe" render={() => <Home user={this.state.user} />} />
+            <Route exact path="/trophy" render={() => <Home user={this.state.user} />} />
         </Switch>
         </Router>
       </div>

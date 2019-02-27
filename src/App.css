@@ -212,3 +212,16 @@ body {
 #loginButton {
 	width: 100%;
 }
+
+.dropdown-menu {
+	background-color: black;
+	color: white;
+}
+
+.dropdown-menu ul {
+	list-style: none;
+}
+
+#profileMenu:hover {
+	cursor: pointer;
+}
