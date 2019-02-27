@@ -83,7 +83,7 @@ class UserMain extends Component {
         <div className="col-sm-12 text-center">
           <h2>
             Welcome back,
-            <br /> Sophia!
+            <br /> {this.props.user}
           </h2>
         </div>
 
