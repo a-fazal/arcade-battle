@@ -3,11 +3,11 @@ import { Doughnut, Line } from "react-chartjs-2";
 import posed from 'react-pose';
 
 const Circle = posed.div({
-  	hidden: { opacity: 0 },
-  	visible: { opacity: 0.35 }
+  		hidden: { opacity: 0 },
+  		visible: { opacity: 0.5 }
 });
 
-class TicTacToe extends Component {
+class Checkers extends Component {
   state = { isVisibile: true };
 
   componentDidMount() {
@@ -75,7 +75,7 @@ class TicTacToe extends Component {
       <div className="row">
         <div className="col-sm-12 text-center">
           <div className="game-title">
-			TIC TAC TOE
+			CHECKERS
           </div>
         </div>
 
@@ -121,7 +121,7 @@ class TicTacToe extends Component {
       	</div>
 
       	<div className="fade">
-      		<Circle className="circle" pose={isVisible ? "visible": "hidden"} />
+      		<Circle id="circle" pose={isVisible ? "visible": "hidden"} />
       	</div>
 
       </div>
@@ -129,4 +129,4 @@ class TicTacToe extends Component {
   }
 }
 
-export default TicTacToe;
+export default Checkers;

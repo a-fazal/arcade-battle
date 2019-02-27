@@ -183,6 +183,13 @@ body {
 
 }
 
+.green h1 {
+	font-size: 160px;
+	text-align: center;
+	border-radius: 50%;
+	border-color: #FF6384;
+}
+
 .stats {
 	font-size: 40px !important;
 }
@@ -224,4 +231,21 @@ body {
 
 #profileMenu:hover {
 	cursor: pointer;
+}
+
+#start-button {
+	padding-left: 10px;
+	padding-right: 10px;
+	top: 68%;
+	left: 53%;
+	position: fixed;
+	border-radius: 10%;
+	border-color: #FF6384;
+}
+
+#circle {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background-color: #FF6384;
 }
