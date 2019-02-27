@@ -64,6 +64,14 @@ body {
 
 }
 
+.game-title {
+  font-size: 38px;
+  font-family:'VT323', sans-serif;
+  color: #c5c5c5;
+  letter-spacing: 8px;
+  font-weight:900;
+}
+
 .navbar-brand-transparent {
   font-size: 38px;
   font-family:'VT323', sans-serif;

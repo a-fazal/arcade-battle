@@ -4,6 +4,7 @@ import "./App.css";
 import UserMain from "./UserMain";
 import Trophy from "./Trophy";
 import TicTacToe from "./TicTacToe";
+import Checkers from "./Checkers";
 import { BrowserRouter as Router, Route, Link, Switch, withRouter  } from "react-router-dom";
 
 class Home extends Component {
@@ -83,12 +84,14 @@ class Home extends Component {
                 </Link>
               </div>
               <div className="sidebaritem">
+              <Link to="/checkers">
                 <i className="fas fa-chess-board checkers-icon" />
                 <div>
                   Checkers
                   <br />
                   <span className="subtitle">Timeless strategy fun.</span>
                 </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -98,6 +101,7 @@ class Home extends Component {
             <Route exact path="/home" render={() => <UserMain user={this.props.user} />} />
             <Route exact path="/trophy" render={() => <Trophy user={this.props.user} />} />
             <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
+            <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
             </Switch>
 
           </div>

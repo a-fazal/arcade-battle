@@ -1,23 +1,8 @@
 import React, { Component } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
-import posed from 'react-pose';
-
-const Circle = posed.div({
-  	hidden: { opacity: 0 },
-  	visible: { opacity: 0.35 }
-});
 
 class TicTacToe extends Component {
-  state = { isVisibile: true };
-
-  componentDidMount() {
-    setInterval(() => {
-    	this.setState({ isVisible: !this.state.isVisible })
-    }, 1000);
-  }
-
   render() {
-  	const { isVisible } = this.state;
 
     const options1 = {
       scales: {
@@ -118,10 +103,6 @@ class TicTacToe extends Component {
       			</div>
       			</a>
       		</div>
-      	</div>
-
-      	<div className="fade">
-      		<Circle className="circle" pose={isVisible ? "visible": "hidden"} />
       	</div>
 
       </div>
