@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 
 class TicTacToe extends Component {
+
   render() {
 
     const options1 = {
@@ -103,6 +104,11 @@ class TicTacToe extends Component {
       			</div>
       			</a>
       		</div>
+      	</div>
+
+      	<div>
+      		<i className="fas fa-times icon-gradient move"></i>
+      		<i class="far fa-circle icon-gradient move"></i>
       	</div>
 
       </div>
