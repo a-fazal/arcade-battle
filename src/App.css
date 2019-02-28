@@ -252,16 +252,16 @@ body {
 	border-width: 5px;
 }
 
-.fa-times {
+#tictactoe-icons .fa-times {
 	top: 74%;
 	left: 35%;
-	font-size: 12em;
+
 }
 
-.fa-circle {
+#tictactoe-icons .fa-circle {
 	top: 74%;
 	left: 78%;
-	font-size: 10em;
+
 }
 
 .move {
@@ -287,4 +287,29 @@ body {
 	to {
 		transform: translateY(-70px);
 	}
+}
+
+#tictactoeboard {
+	margin: 0 auto;
+}
+
+#tictactoeboard td {
+	border: 3px solid #d3cfd6;
+	height: 200px;
+	width: 200px;
+	text-align:center;
+}
+
+.ttt-circle-all {
+	background-image: linear-gradient(to right, #308bd0 0%, #330867 100%);
+	color: transparent;
+	-webkit-background-clip: text;
+	font-size: 10em;
+}
+
+.ttt-x-all {
+	background: linear-gradient(to right, rgb(242, 112, 156), rgb(255, 148, 114));
+	color: transparent;
+	-webkit-background-clip: text;
+	font-size: 12em;
 }
