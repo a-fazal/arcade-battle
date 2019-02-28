@@ -5,6 +5,7 @@ import UserMain from "./UserMain";
 import Trophy from "./Trophy";
 import TicTacToe from "./TicTacToe";
 import Checkers from "./Checkers";
+import Profile from "./Profile";
 import { BrowserRouter as Router, Route, Link, Switch, withRouter  } from "react-router-dom";
 
 class Home extends Component {
@@ -58,7 +59,9 @@ class Home extends Component {
   </div>
   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="profileMenu">
     <ul>
+    <Link to="user">
     <li>Profile</li>
+    </Link>
     <Link to="/" onClick={this.redirectToLogin}><li>Logout</li></Link>
     </ul>
   </div>
@@ -102,6 +105,7 @@ class Home extends Component {
             <Route exact path="/trophy" render={() => <Trophy user={this.props.user} />} />
             <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
             <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
+            <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
             </Switch>
 
           </div>
