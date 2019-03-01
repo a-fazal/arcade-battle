@@ -6,6 +6,15 @@ constructor(props) {
    this.onItemClick = this.onItemClick.bind(this);
    this.state = {
      turn: 'o',
+     'top-left-ttt': 'empty',
+     'top-center-ttt': 'empty',
+     'top-right-ttt': 'empty',
+     'middle-left-ttt': 'empty',
+     'middle-center-ttt': 'empty',
+     'middle-right-ttt': 'empty',
+     'bottom-left-ttt': 'empty',
+     'bottom-center-ttt': 'empty',
+     'bottom-right-ttt': 'empty',
    }
 
 }
@@ -16,7 +25,6 @@ componentDidMount() {
   const main = document.querySelector('#main');
   main.classList.remove('col-sm-9');
   main.classList.add('col-sm-12');
-  this.onItemClick = this.onItemClick.bind(this);
 }
 
 componentWillUnmount() {
@@ -31,21 +39,10 @@ componentWillUnmount() {
 onItemClick(e) {
     e.preventDefault();
     if (this.state.turn === 'o') {
-      const circle = document.createElement("i");
-      circle.classList.add('far');
-      circle.classList.add('fa-circle');
-      circle.classList.add('ttt-circle-all');
-      e.currentTarget.appendChild(circle);
-      this.setState({turn:'x'});
+      this.setState({turn:'x', [e.currentTarget.id]: 'o'});
   } else {
-    const circle = document.createElement("i");
-    circle.classList.add('fas');
-    circle.classList.add('fa-times');
-    circle.classList.add('ttt-x-all');
-    e.currentTarget.appendChild(circle);
-    this.setState({turn:'o'});
+      this.setState({turn:'o', [e.currentTarget.id]: 'x'});
   }
-
 }
 
 
@@ -55,35 +52,80 @@ onItemClick(e) {
       <tbody>
         <tr>
           <td id="top-left-ttt" onClick={this.onItemClick}>
-
+          {this.state['top-left-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['top-left-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="top-center-ttt" onClick={this.onItemClick}>
-
+          {this.state['top-center-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['top-center-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="top-right-ttt" onClick={this.onItemClick}>
-
+          {this.state['top-right-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['top-right-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
         </tr>
         <tr>
           <td id="middle-left-ttt" onClick={this.onItemClick}>
-
+          {this.state['middle-left-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['middle-left-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="middle-center-ttt" onClick={this.onItemClick}>
-
+          {this.state['middle-center-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['middle-center-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="middle-right-ttt" onClick={this.onItemClick}>
-
+          {this.state['middle-right-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['middle-right-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
         </tr>
         <tr>
           <td id="bottom-left-ttt" onClick={this.onItemClick}>
-
+          {this.state['bottom-left-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['bottom-left-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="bottom-center-ttt" onClick={this.onItemClick}>
-
+          {this.state['bottom-center-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['bottom-center-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
           <td id="bottom-right-ttt" onClick={this.onItemClick}>
-
+          {this.state['bottom-right-ttt'] === 'o' &&
+            <i class="far fa-circle ttt-circle-all"></i>
+          }
+          {this.state['bottom-right-ttt'] === 'x' &&
+            <i class="fas fa-times ttt-x-all"></i>
+          }
           </td>
         </tr>
         </tbody>
