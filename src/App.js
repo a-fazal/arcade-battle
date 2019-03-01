@@ -8,6 +8,7 @@ import Login from "./Login";
 import TicTacToe from "./TicTacToe";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
+import TicTacToeInGame from "./TicTacToeInGame";
 import { BrowserRouter as Router, Route, Link, Switch  } from "react-router-dom";
 
 class App extends Component {
@@ -31,6 +32,7 @@ class App extends Component {
             <Route exact path="/" render={() => <Login setUser={this.setUser} />} />
             <Route exact path="/home" render={() => <Home user={this.state.user} />} />
             <Route exact path="/tictactoe" render={() => <Home user={this.state.user} />} />
+            <Route exact path="/tictactoeingame" render={() => <Home user={this.state.user} />} />
             <Route exact path="/trophy" render={() => <Home user={this.state.user} />} />
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
+import { BrowserRouter as Router, Route, Link, Switch, withRouter  } from "react-router-dom";
+
 
 class TicTacToe extends Component {
 
@@ -53,7 +55,7 @@ class TicTacToe extends Component {
           ],
           borderWidth: 1,
           lineTension: 0
-        }, 
+        },
       ],
     };
 
@@ -98,17 +100,17 @@ class TicTacToe extends Component {
 
         <div className="row">
       		<div className="col-sm-4 text-center">
-      		<a href="">
+      		<Link to="/tictactoeingame">
       			<div className="navbar-brand" id="start-button">
       			Start Game<br /><i class="fas fa-play icon-gradient"></i>
       			</div>
-      			</a>
+      			</Link>
       		</div>
       	</div>
 
-      	<div>
-      		<i className="fas fa-times icon-gradient move"></i>
-      		<i class="far fa-circle icon-gradient move"></i>
+      	<div id="tictactoe-icons">
+      		<i className="fas fa-times ttt-x-all move"></i>
+      		<i class="far fa-circle ttt-circle-all move"></i>
       	</div>
 
       </div>

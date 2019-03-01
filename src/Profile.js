@@ -18,9 +18,20 @@ class Profile extends Component {
       		<div className="col-sm">
       			<div className="avatar-container">
 	      			<img className="avatar" src={avatar} />
+	      			<span className="user-bio">Hello I am new! I look forward to playing!</span>
 	      		</div>
 	      		<button type="button" className="btn btn-primary" id="change-icon">Change avatar</button>
 	      	</div>
+
+      	</div>
+
+      	<div className="row">
+      		<div className="col-6 profile-changes">
+      			<span>Change username</span>
+      		</div>
+      		<div className="col-6 profile-changes">
+      			<span>Change password</span>
+      		</div>
       	</div>
       </div>
     );
