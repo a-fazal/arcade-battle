@@ -198,6 +198,10 @@ body {
 	border-color: #FF6384;
 }
 
+.green h2 {
+	font-size: 80px;
+}
+
 .stats {
 	font-size: 40px !important;
 }
@@ -287,4 +291,22 @@ body {
 	to {
 		transform: translateY(-70px);
 	}
+}
+
+.username-container {
+	font-family:'VT323', sans-serif;
+	display: inline-text;
+}
+
+.avatar-container {
+	border-left: 3px solid rgba(204,51,204,0.2);
+}
+
+.avatar {
+	height: 200px;
+}
+
+#change-icon {
+	margin-top: 15px;
+	margin-left: 38px;
 }

@@ -59,7 +59,7 @@ class Home extends Component {
   </div>
   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="profileMenu">
     <ul>
-    <Link to="user">
+    <Link to="/user">
     <li>Profile</li>
     </Link>
     <Link to="/" onClick={this.redirectToLogin}><li>Logout</li></Link>
@@ -105,7 +105,7 @@ class Home extends Component {
             <Route exact path="/trophy" render={() => <Trophy user={this.props.user} />} />
             <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
             <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
-            <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
+            <Route exact path="/user" render={() => <Profile user={this.props.user} />} />
             </Switch>
 
           </div>
