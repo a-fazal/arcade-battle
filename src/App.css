@@ -324,6 +324,18 @@ body {
 #admin-dashboard {
 	width: 1000px;
 	margin: auto;
+    padding: 20px;
+}
+
+#admin-dashboard .logout {
+    position: absolute;
+    top: 25px;
+    background-color: #111111;
+    height: 40px;
+    width: 100px;
+    border-color: blue;
+    color: blue;
+    border-radius: 8px;
 }
 
 .pending-user {

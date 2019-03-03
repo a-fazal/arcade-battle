@@ -14,11 +14,16 @@ class Admin extends Component {
     this.denyPendingUser = this.denyPendingUser.bind(this);
     this.banUser = this.banUser.bind(this);
     this.reinstateUser = this.reinstateUser.bind(this);
+    this.logout = this.logout.bind(this);
  }
 
   componentDidMount() {
     this.fetchPendingUsers();
     this.fetchActiveUsers();
+  }
+  
+  logout() {
+    this.props.history.push('/');
   }
 
   fetchActiveUsers() {
@@ -120,6 +125,9 @@ class Admin extends Component {
   render() {
     return (
       <div id="admin-dashboard">
+        <button className="logout" onClick={this.logout}>
+          <i className="fas fa-chevron-left" />LOGOUT
+        </button>
         <div id="pending-registrations">
           <div className="text-center game-title">
             PENDING USER REGISTRATIONS
