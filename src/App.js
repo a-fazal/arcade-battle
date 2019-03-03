@@ -3,6 +3,7 @@ import avatar from "./avatar.jpeg";
 import "./App.css";
 import UserMain from "./UserMain";
 import Home from "./Home";
+import Admin from "./Admin";
 import Trophy from "./Trophy";
 import Login from "./Login";
 import TicTacToe from "./TicTacToe";
@@ -36,6 +37,7 @@ class App extends Component {
             <Route exact path="/trophy" render={() => <Home user={this.state.user} />} />
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
+            <Route exact path="/admin" render={() => <Admin user={this.state.user} />} />
         </Switch>
         </Router>
       </div>

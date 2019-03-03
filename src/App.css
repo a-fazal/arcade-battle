@@ -207,6 +207,7 @@ body {
 }
 
 /* TROPHY PAGE STYLES */
+
 .trophy {
 	display: inline-block;
 	position: relative;
@@ -269,6 +270,73 @@ body {
 
 .trophy:hover .trophy-description {
 	display: inline-block;
+}
+
+/* ADMIN DASHBOARD STYLES */
+
+#admin-dashboard {
+	width: 1000px;
+	margin: auto;
+}
+
+.pending-user {
+	margin: 20px 0px;
+	height: 50px;
+	padding: 12px;
+	background-color: #111111;
+}
+
+.pending-user button {
+	float: right;
+	border: none;
+	background-color: transparent;
+}
+
+.pending-user .user-name {
+	color: lime;
+}
+
+.pending-user .deny-user {
+	color: red;
+}
+
+.pending-user .accept-user {
+	color: lightblue;
+}
+
+#admin-dashboard .active-user {
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 250px;
+	margin: 25px;	
+}
+
+#admin-dashboard .user-avatar {
+	width: 200px;
+	height: 200px;
+	background-image: url("./avatar.jpeg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 50%;
+	position: absolute;
+	top: 50px;
+	left: 0px;
+}
+
+#admin-dashboard .user-description {
+	display: block;
+	position: absolute;
+	top: 0px;
+	width: 200px;
+	height: 50px;
+	padding: 10px;
+	font-size: 24px;
+	font-family:'VT323', sans-serif;
+	color: #c5c5c5;
+	letter-spacing: 8px;
+	font-weight:900;
 }
 
 #login {

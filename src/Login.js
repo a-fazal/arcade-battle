@@ -19,12 +19,13 @@ class Login extends Component {
     this.state = {
       user: "",
       login: true,
-      registeredUsers: []
+      registeredUsers: [],
+      registeredAdmins: []
     };
     this.handleClick = this.handleClick.bind(this);
     this.registerForm = this.registerForm.bind(this);
     this.state.registeredUsers.push(new User("user", "user"));
-    this.state.registeredUsers.push(new User("admin", "admin"));
+    this.state.registeredAdmins.push(new User("admin", "admin"));
   }
 
   handleClick(e) {
@@ -42,6 +43,17 @@ class Login extends Component {
           authenticated = true;
           this.props.setUser(user);
           this.props.history.push("/home");
+        }
+      }
+      for (let i = 0; i < this.state.registeredAdmins.length; i++) {
+        if (
+          user === this.state.registeredAdmins[i].user &&
+          password === this.state.registeredAdmins[i].password
+        ) {
+          this.setState({ user: user });
+          authenticated = true;
+          this.props.setUser(user);
+          this.props.history.push("/admin");
         }
       }
       if (!authenticated) {
