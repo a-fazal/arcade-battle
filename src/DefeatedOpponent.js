@@ -15,7 +15,7 @@ class DefeatedOpponent extends Component {
             <div className="trophy-avatar"></div>
           </div>
           <div className="trophy-description">
-            <div className="text-center">{opponent.username}<br />{opponent.lastBeaten}</div>
+            <div className="text-center">{opponent.username}<br />{opponent.lastBeaten}<br />{"Beaten in: " + opponent.beatenIn}</div>
           </div>
         </Link>
       </div>
