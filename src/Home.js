@@ -8,6 +8,7 @@ import TicTacToeInGame from "./TicTacToeInGame";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
 import { BrowserRouter as Router, Route, Link, Switch, withRouter } from "react-router-dom";
+import UserProfile from "./UserProfile";
 
 class Home extends Component {
   constructor(props) {
@@ -22,9 +23,8 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="App">
         <Router>
-          <div>
+          <div className="App">
             <nav className="navbar navbar-expand-lg">
               <Link to="/home">
                 <div className="navbar-brand">
@@ -108,13 +108,13 @@ class Home extends Component {
                   <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
                   <Route exact path="/user" render={() => <Profile user={this.props.user} />} />
                   <Route exact path="/tictactoeingame" render={() => <TicTacToeInGame user={this.props.user} />} />
+                  <Route exact path="/user/:id" render={(props) => <UserProfile user={this.props.user} {...props}/>} />
                 </Switch>
 
               </div>
             </div>
           </div>
         </Router>
-      </div>
     );
   };
 

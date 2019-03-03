@@ -10,7 +10,7 @@ import TicTacToe from "./TicTacToe";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
 import TicTacToeInGame from "./TicTacToeInGame";
-import { BrowserRouter as Router, Route, Link, Switch  } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -22,14 +22,14 @@ class App extends Component {
   }
 
   setUser(user) {
-    this.setState({user:user});
+    this.setState({ user: user });
   }
 
   render() {
     return (
       <div className="App">
         <Router>
-        <Switch>
+          <Switch>
             <Route exact path="/" render={() => <Login setUser={this.setUser} />} />
             <Route exact path="/home" render={() => <Home user={this.state.user} />} />
             <Route exact path="/tictactoe" render={() => <Home user={this.state.user} />} />
@@ -38,7 +38,7 @@ class App extends Component {
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
             <Route exact path="/admin" render={() => <Admin user={this.state.user} />} />
-        </Switch>
+          </Switch>
         </Router>
       </div>
     );
