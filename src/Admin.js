@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 class Admin extends Component {
   constructor(props) {
@@ -137,18 +138,20 @@ class Admin extends Component {
             ACTIVE USERS
           </div>
           {this.state.active.map(user =>
-            <div className="active-user">
-              <div className="user-description">
-                <div className="text-center">{user.username}</div>
+            <Link to={"/user/" + user.id}>
+              <div className="active-user">
+                <div className="user-description">
+                  <div className="text-center">{user.username}</div>
+                </div>
+                <div className="user-avatar"></div>
+                <div className="user-buttons-container text-center">
+                  {user.banned ?
+                    <button className="reinstate-user" onClick={this.reinstateUser(user.id)}>REINSTATE</button>
+                    : <button className="ban-user" onClick={this.banUser(user.id)}>BAN</button>}
+                </div>
+                {user.banned && <div className="user-banned">BANNED</div>}
               </div>
-              <div className="user-avatar"></div>
-              <div className="user-buttons-container text-center">
-                {user.banned ?
-                  <button className="reinstate-user" onClick={this.reinstateUser(user.id)}>REINSTATE</button>
-                  : <button className="ban-user" onClick={this.banUser(user.id)}>BAN</button>}
-              </div>
-              {user.banned && <div className="user-banned">BANNED</div>}
-            </div>
+            </Link>
           )}
         </div>
       </div>

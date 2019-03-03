@@ -10,6 +10,7 @@ import TicTacToe from "./TicTacToe";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
 import TicTacToeInGame from "./TicTacToeInGame";
+import UserProfile from "./UserProfile";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 class App extends Component {
@@ -38,6 +39,7 @@ class App extends Component {
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
             <Route exact path="/admin" render={() => <Admin user={this.state.user} />} />
+            <Route exact path="/user/:id" render={(props) => <UserProfile user={this.state.user} {...props}/>} />
           </Switch>
         </Router>
       </div>

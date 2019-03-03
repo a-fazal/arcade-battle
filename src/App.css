@@ -204,6 +204,22 @@ body {
 
 /* USER PROFILE STYLES */
 
+#userProfile {
+    padding: 20px;
+}
+
+#userProfile .back-button {
+    position: absolute;
+    top: 40px;
+    left: 100px;
+    background-color: #111111;
+    height: 40px;
+    width: 80px;
+    border-color: blue;
+    color: blue;
+    border-radius: 8px;
+}
+
 #userProfile .charts .chart-container {
 	width: 100%;
 	height: 200px;

@@ -8,6 +8,7 @@ class UserProfile extends Component {
       userData: null
     }
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
+    this.goBack = this.goBack.bind(this);
   }
 
   componentDidMount() {
@@ -36,6 +37,17 @@ class UserProfile extends Component {
         }
       }
       this.setState({ userData: data });
+    }
+  }
+  
+  goBack(e) {
+    e.preventDefault()
+    console.log(this.props);
+    if (this.props.user === "user") {
+        this.props.history.push('/trophy');
+    }
+    else if (this.props.user === "admin") {
+        this.props.history.push('/admin');
     }
   }
   
@@ -202,6 +214,9 @@ class UserProfile extends Component {
 
     return (
       <div id="userProfile">
+        <button className="back-button" onClick={this.goBack}>
+          <i className="fas fa-chevron-left" />BACK
+        </button>
         <div className="text-center">
           <h1 id="username">{data.username}</h1>
         </div>
