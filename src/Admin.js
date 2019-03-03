@@ -99,7 +99,8 @@ class Admin extends Component {
   }
   
   banUser(id) {
-    return (function() {
+    return (function(e) {
+      e.preventDefault();
       const active = this.state.active;
       active.forEach(function(user) {
         if (user.id === id) {
@@ -111,7 +112,8 @@ class Admin extends Component {
   }
   
   reinstateUser(id) {
-    return (function() {
+    return (function(e) {
+      e.preventDefault();
       const active = this.state.active;
       active.forEach(function(user) {
         if (user.id === id) {
