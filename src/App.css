@@ -339,7 +339,7 @@ body {
 	display: inline-block;
 	position: relative;
 	width: 200px;
-	height: 250px;
+	height: 300px;
 	margin: 25px;	
 }
 
@@ -368,6 +368,47 @@ body {
 	color: #c5c5c5;
 	letter-spacing: 8px;
 	font-weight:900;
+}
+
+#admin-dashboard .user-buttons-container {
+    height: 50px;
+    width: 200px;
+    position: absolute;
+    top: 250px;
+    padding-top: 5px;
+}
+
+.active-user .ban-user {
+	background-color: white;
+    color: black;
+    border-color: red;
+    border-radius: 8px;
+}
+
+.active-user .ban-user:hover {
+    background-color: red;
+    color: white;
+}
+
+.active-user .reinstate-user {
+	background-color: white;
+    color: black;
+    border-color: lightblue;
+    border-radius: 8px;
+}
+
+.active-user .reinstate-user:hover {
+    background-color: lightblue;
+    color: white;
+}
+
+.active-user .user-banned {
+    position: absolute;
+    top: 115px;
+    left: 10px;
+    transform: rotate(-30deg);
+    font-size: 48px;
+    color: red;
 }
 
 #login {

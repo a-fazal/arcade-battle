@@ -38,6 +38,7 @@ class UserProfile extends Component {
       this.setState({ userData: data });
     }
   }
+  
   render() {
     const data = this.state.userData;
 
