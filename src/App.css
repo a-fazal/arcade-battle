@@ -637,6 +637,83 @@ body {
     right: 150px;
 }
 
+#inGameHeader {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: #111111;
+}
+
+#winstreaks {
+    padding: 10px;
+    display: inline-block;
+    width: 200px;
+    margin-left: calc(50% - 500px);
+}
+
+.winstreaks-amount {
+    font-size: 36px;
+    font-family:'VT323', sans-serif;
+    color: #c5c5c5;
+    letter-spacing: 8px;
+    font-weight:900;
+}
+
+.player-stats {
+    width: 400px;
+    height: 100%;
+}
+
+.player-avatar {
+    width: 100px;
+	height: 100px;
+	background-image: url("./avatar.jpeg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 50%;
+    position: absolute;
+    top: 0;
+}
+
+.player-name {
+    position: absolute;
+    top: 20px;
+    font-size: 38px;
+    font-family:'VT323', sans-serif;
+    color: #c5c5c5;
+    letter-spacing: 8px;
+    font-weight:900;
+}
+
+#myStats {
+    float: left;
+    background-color: red;
+}
+
+#myStats .player-avatar {
+    left: 20px;
+}
+
+#myStats .player-name {
+    left: 150px;
+}
+
+#theirStats {
+    float: right;
+    background-color: blue;
+}
+
+#theirStats .player-avatar {
+    right: 20px;
+}
+
+#theirStats .player-name {
+    right: 150px;
+}
+
 #tictactoeboard {
     position: absolute;
     top: 150px;
