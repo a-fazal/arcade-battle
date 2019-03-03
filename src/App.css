@@ -206,6 +206,71 @@ body {
 	font-size: 40px !important;
 }
 
+/* TROPHY PAGE STYLES */
+.trophy {
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 200px;
+	margin: 30px;
+}
+
+.trophy-plaque {
+	width: 200px;
+	height: 200px;
+	background-image: url("./plaque.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.trophy-crown {
+	width: 80px;
+	height: 46px;
+	background-image: url("./crown.png");
+	z-index: 10;
+	position: absolute;
+	top: 10px;
+	left: 60px;
+}
+
+.trophy-crown-spacer {
+	width: 80px;
+	height: 46px;
+	position: absolute;
+	top: 10px;
+	left: 60px;
+}
+
+.trophy-avatar {
+	width: 100px;
+	height: 100px;
+	background-image: url("./avatar.jpeg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 50%;
+	position: absolute;
+	top: 50px;
+	left: 50px;
+}
+
+.trophy-description {
+	display: none;
+	position: absolute;
+	top: 156px;
+	width: 200px;
+	height: 70px;
+	background-color: #111111;
+	color: lime;
+	border-radius: 10%;
+	padding: 10px;
+}
+
+.trophy:hover .trophy-description {
+	display: inline-block;
+}
+
 #login {
 	background-color: black;
 	width: 320px;
