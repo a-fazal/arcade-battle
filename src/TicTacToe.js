@@ -102,7 +102,7 @@ class TicTacToe extends Component {
       		<div className="col-sm-4 text-center">
       		<Link to="/tictactoeingame">
       			<div className="navbar-brand" id="start-button">
-      			Start Game<br /><i class="fas fa-play icon-gradient"></i>
+      			Start Game<br /><i className="fas fa-play icon-gradient"></i>
       			</div>
       			</Link>
       		</div>

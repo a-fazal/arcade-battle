@@ -3,13 +3,15 @@ import avatar from "./avatar.jpeg";
 import "./App.css";
 import UserMain from "./UserMain";
 import Home from "./Home";
+import Admin from "./Admin";
 import Trophy from "./Trophy";
 import Login from "./Login";
 import TicTacToe from "./TicTacToe";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
 import TicTacToeInGame from "./TicTacToeInGame";
-import { BrowserRouter as Router, Route, Link, Switch  } from "react-router-dom";
+import UserProfile from "./UserProfile";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -21,14 +23,14 @@ class App extends Component {
   }
 
   setUser(user) {
-    this.setState({user:user});
+    this.setState({ user: user });
   }
 
   render() {
     return (
       <div className="App">
         <Router>
-        <Switch>
+          <Switch>
             <Route exact path="/" render={() => <Login setUser={this.setUser} />} />
             <Route exact path="/home" render={() => <Home user={this.state.user} />} />
             <Route exact path="/tictactoe" render={() => <Home user={this.state.user} />} />
@@ -36,7 +38,9 @@ class App extends Component {
             <Route exact path="/trophy" render={() => <Home user={this.state.user} />} />
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
-        </Switch>
+            <Route exact path="/admin" render={(props) => <Admin user={this.state.user} {...props} />} />
+            <Route exact path="/user/:id" render={(props) => <UserProfile user={this.state.user} {...props}/>} />
+          </Switch>
         </Router>
       </div>
     );
