@@ -18,7 +18,7 @@ class Profile extends Component {
       		<div className="col-sm">
       			<div className="avatar-container">
 	      			<img className="avatar" src={avatar} />
-	      			<span className="user-bio">Hello I am new! I look forward to playing!</span>
+	      			<span className="user-bio">Hello I am new! I look forward to playing with everyone!</span>
 	      		</div>
 	      		<button type="button" className="btn btn-primary" id="change-icon">Change avatar</button>
 	      	</div>
@@ -26,11 +26,28 @@ class Profile extends Component {
       	</div>
 
       	<div className="row">
-      		<div className="col-6 profile-changes">
-      			<span>Change username</span>
+      		<div className="col-5 profile-changes">
+      			<span className="profile-changes-header">Change username</span>
+      			<form>
+      			New username<br/>
+      			<input type="text" className="form-control" placeholder="Enter username"/>
+      			<br/>
+      			</form>
       		</div>
-      		<div className="col-6 profile-changes">
+
+      		<div className="col-2">
+      		</div>
+
+      		<div className="col-5 profile-changes">
       			<span>Change password</span>
+      			<form>
+      			Old password<br/>
+      			<input type="text" className="form-control" placeholder="Enter old password"/>
+      			<br/>
+      			New password<br/>
+      			<input type="text" className="form-control" placeholder="Enter new password"/>
+      			<br />
+      			</form>
       		</div>
       	</div>
       </div>
