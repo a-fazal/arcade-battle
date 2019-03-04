@@ -73,11 +73,13 @@ checkForOpponent() {
 
 onItemClick(e) {
     e.preventDefault();
-    if (this.state.turn === 'o') {
-      this.setState({turn:'x', [e.currentTarget.id]: 'o'});
-  } else {
-      this.setState({turn:'o', [e.currentTarget.id]: 'x'});
-  }
+    if (this.state[e.currentTarget.id] == 'empty'){
+      if (this.state.turn === 'o') {
+        this.setState({turn:'x', [e.currentTarget.id]: 'o'});
+      } else {
+        this.setState({turn:'o', [e.currentTarget.id]: 'x'});
+      }
+    }
 }
 
 
