@@ -4,13 +4,18 @@
 
 You can clone the repo with
 
-``` git clone https://github.com/csc309-winter-2019/team17.git ```
+```
+git clone https://github.com/csc309-winter-2019/team17.git
+```
 
 (or download as a zip)
 
 Then
 
-``` cd team17 ``` (or where you saved the folder)
+```
+cd team17
+``` 
+(or where you saved the folder)
 
 And
 ```
