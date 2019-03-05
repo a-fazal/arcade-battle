@@ -22,11 +22,11 @@ User Instructions and Features:
 -If you click on Tic-Tac-Toe, you are taken to a start screen where you can see some specific stats for you about the game.
 -If you press start, then after an opponent is selected (just the view for Phase 1) the game will start.
   You can now play Tic-Tac-Toe on the game board and see your opponent on the left as well as win-streak stats in the center.
-  For Phase 1, you can play against yourself. The game will end when a user places X's or O's along an axis or diagonal, and that user will win.
+  For Phase 1, you can play against yourself. The game will end when there are X's or O's along an axis or diagonal on the board, and that respective user will win.
 -As for some other user features, on the header navigation bar, you can click the trophy icon to see the players the user has defeated.
 -You can also click on the user picture on the top right and view your profile, or logout.
 
-Admin instructions and Features:
+Admin Instructions and Features:
 -You can login with the admin (username: admin, password: admin)
 -For the admins, there is an admin dashboard, here the admin can approve users, ban users, reinstate users, and modify users.
 -If you click on a user, you are taken to page with detailed user stats for each game, from there you can choose to modify their user information.
