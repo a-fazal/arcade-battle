@@ -208,16 +208,25 @@ body {
     padding: 20px;
 }
 
-#userProfile .back-button {
+#userProfile .profile-button {
     position: absolute;
-    top: 40px;
-    left: 100px;
     background-color: #111111;
     height: 40px;
-    width: 80px;
     border-color: blue;
     color: blue;
     border-radius: 8px;
+}
+
+#userProfile #back-btn{
+	top: 40px;
+	width: 80px;
+    left: 100px;
+}
+
+#userProfile #profile-btn{
+	top: 40px;
+	right: 100px;
+	width: 100px;
 }
 
 #userProfile .charts .chart-container {

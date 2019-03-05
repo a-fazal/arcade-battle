@@ -74,6 +74,7 @@ class Admin extends Component {
   }
   
   acceptPendingUser(id) {
+    // MODIFY BACK END
     return (function() {
       let i, idx;
       for(i = 0; i < this.state.pending.length; i++){
@@ -93,12 +94,14 @@ class Admin extends Component {
   }
   
   denyPendingUser(id) {
+    // MODIFY BACK END
     return (function() {
       this.setState({pending: this.state.pending.filter(elem => elem.id !== id)});
     }).bind(this);
   }
   
   banUser(id) {
+    // MODIFY BACK END
     return (function(e) {
       e.preventDefault();
       const active = this.state.active;
@@ -112,6 +115,7 @@ class Admin extends Component {
   }
   
   reinstateUser(id) {
+    // MODIFY BACKEND
     return (function(e) {
       e.preventDefault();
       const active = this.state.active;

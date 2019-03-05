@@ -4,6 +4,7 @@ import avatar from "./avatar.jpeg";
 class Profile extends Component {
   constructor(props) {
     super(props);
+    // BACK END STATES
     this.state = {
       name: 'user',
       password: 'user'
@@ -14,6 +15,7 @@ class Profile extends Component {
 
   changePassword(e) {
     e.preventDefault();
+    // MODIFY BACK END
     const oldPass = document.querySelector('#oldPass').value;
     const newPass = document.querySelector('#newPass').value;
     if ((oldPass.length > 0 || newPass.length > 0) && oldPass === this.state.password) {
@@ -29,6 +31,7 @@ class Profile extends Component {
 
   changeName(e) {
     e.preventDefault();
+    // MODIFY BACK END
     const inputtedName = document.querySelector('#nameInput').value;
     if (inputtedName.length > 0) {
       alert('Succesfully changed name!');

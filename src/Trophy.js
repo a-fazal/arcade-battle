@@ -3,6 +3,7 @@ import DefeatedOpponent from "./DefeatedOpponent";
 
 class Trophy extends Component {
   render() {
+    // BACK END
     const data = {
       defeated: [
         {
