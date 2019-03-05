@@ -10,19 +10,21 @@ constructor(props) {
    this.onItemClick = this.onItemClick.bind(this);
    this.state = {
      turn: 'o',
-     'top-left-ttt': 'empty',
-     'top-center-ttt': 'empty',
-     'top-right-ttt': 'empty',
-     'middle-left-ttt': 'empty',
-     'middle-center-ttt': 'empty',
-     'middle-right-ttt': 'empty',
-     'bottom-left-ttt': 'empty',
-     'bottom-center-ttt': 'empty',
-     'bottom-right-ttt': 'empty',
+     board: {'top-left-ttt': {row: 0, col: 0, 'spot': 'empty'},
+     'top-center-ttt': {row: 0, col: 1, 'spot': 'empty'},
+     'top-right-ttt': {row: 0, col: 2, 'spot': 'empty'},
+     'middle-left-ttt': {row: 1, col: 0, 'spot': 'empty'},
+     'middle-center-ttt': {row: 1, col: 1, 'spot': 'empty'},
+     'middle-right-ttt': {row: 1, col: 2, 'spot': 'empty'},
+     'bottom-left-ttt': {row: 2, col: 0, 'spot': 'empty'},
+     'bottom-center-ttt': {row: 2, col: 1, 'spot': 'empty'},
+     'bottom-right-ttt': {row: 2, col: 2, 'spot': 'empty'}},
      me: null,
      them: null
+     //end: 0
    }
    this.checkForOpponent = this.checkForOpponent.bind(this);
+   //this.checkForEndGame = this.checkForEndGame.bind(this);
 
 }
 
@@ -73,14 +75,32 @@ checkForOpponent() {
 
 onItemClick(e) {
     e.preventDefault();
-    if (this.state[e.currentTarget.id] == 'empty'){
+    if (this.state.board[e.currentTarget.id]['spot'] === 'empty'){
       if (this.state.turn === 'o') {
-        this.setState({turn:'x', [e.currentTarget.id]: 'o'});
+        this.setState({turn:'x'});
+        this.state.board[e.currentTarget.id]['spot'] = 'o';
       } else {
-        this.setState({turn:'o', [e.currentTarget.id]: 'x'});
+        this.setState({turn:'o'});
+        this.state.board[e.currentTarget.id]['spot'] = 'x';
       }
+      //this.checkForEndGame(this.state.turn);
     }
-}
+  }
+
+/*checkForEndGame(turn){
+  // Check horizontal
+  if (this.state['top-left-ttt'] === turn && 
+    this.state['top-center-ttt'] === turn && 
+    this.state['top-center-ttt'] === turn) {
+      // Display winning message and end game
+      this.state.end = 1;
+  }
+  // Check vertical
+  // Check diagonals
+
+  // Check if 
+  }
+*/
 
 
   render() {
@@ -113,78 +133,78 @@ onItemClick(e) {
           <tbody>
             <tr>
               <td id="top-left-ttt" onClick={this.onItemClick}>
-              {this.state['top-left-ttt'] === 'o' &&
+              {this.state.board['top-left-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['top-left-ttt'] === 'x' &&
+              {this.state.board['top-left-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="top-center-ttt" onClick={this.onItemClick}>
-              {this.state['top-center-ttt'] === 'o' &&
+              {this.state.board['top-center-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['top-center-ttt'] === 'x' &&
+              {this.state.board['top-center-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="top-right-ttt" onClick={this.onItemClick}>
-              {this.state['top-right-ttt'] === 'o' &&
+              {this.state.board['top-right-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['top-right-ttt'] === 'x' &&
+              {this.state.board['top-right-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
             </tr>
             <tr>
               <td id="middle-left-ttt" onClick={this.onItemClick}>
-              {this.state['middle-left-ttt'] === 'o' &&
+              {this.state.board['middle-left-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['middle-left-ttt'] === 'x' &&
+              {this.state.board['middle-left-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="middle-center-ttt" onClick={this.onItemClick}>
-              {this.state['middle-center-ttt'] === 'o' &&
+              {this.state.board['middle-center-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['middle-center-ttt'] === 'x' &&
+              {this.state.board['middle-center-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="middle-right-ttt" onClick={this.onItemClick}>
-              {this.state['middle-right-ttt'] === 'o' &&
+              {this.state.board['middle-right-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['middle-right-ttt'] === 'x' &&
+              {this.state.board['middle-right-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
             </tr>
             <tr>
               <td id="bottom-left-ttt" onClick={this.onItemClick}>
-              {this.state['bottom-left-ttt'] === 'o' &&
+              {this.state.board['bottom-left-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['bottom-left-ttt'] === 'x' &&
+              {this.state.board['bottom-left-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="bottom-center-ttt" onClick={this.onItemClick}>
-              {this.state['bottom-center-ttt'] === 'o' &&
+              {this.state.board['bottom-center-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['bottom-center-ttt'] === 'x' &&
+              {this.state.board['bottom-center-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
               <td id="bottom-right-ttt" onClick={this.onItemClick}>
-              {this.state['bottom-right-ttt'] === 'o' &&
+              {this.state.board['bottom-right-ttt']['spot'] === 'o' &&
                 <i class="far fa-circle ttt-circle-all"></i>
               }
-              {this.state['bottom-right-ttt'] === 'x' &&
+              {this.state.board['bottom-right-ttt']['spot'] === 'x' &&
                 <i class="fas fa-times ttt-x-all"></i>
               }
               </td>
