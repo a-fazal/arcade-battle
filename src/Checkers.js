@@ -2,6 +2,16 @@ import React, { Component } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 
 class Checkers extends Component {
+  constructor(props){
+    super(props);
+    // BACK END DATA
+    this.state = {
+      hoursPlayed: 9,
+      winPercentage: 50,
+      gamesPlayed: 10
+    };
+  }
+
   render() {
 
     const options1 = {
@@ -28,6 +38,7 @@ class Checkers extends Component {
       responsive: true, maintainAspectRatio: false
     };
 
+    // BACK END DATA
     const data1 = {
       type: "line",
       labels: ["W", "L", "L", "W", "W", "L"],
@@ -68,7 +79,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>9</h1></span>
+                <span className="green"><h1>{this.state.hoursPlayed}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -80,7 +91,7 @@ class Checkers extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">50%</span> <br />
+                <span className="green">{this.state.winPercentage}%</span> <br />
               </span>
               Win Percentage
             </span>
@@ -88,7 +99,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>10</h1></span> <br />
+                <span className="green"><h1>{this.state.gamesPlayed}</h1></span> <br />
               </span>
               Games Played
             </span>

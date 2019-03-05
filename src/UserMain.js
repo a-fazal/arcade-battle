@@ -2,7 +2,18 @@ import React, { Component } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 
 class UserMain extends Component {
+  constructor(props){
+    super(props);
+    // BACK END DATA
+    this.state = {
+      hoursPlayed: 9,
+      streak: 20,
+      gamesPlayed: 10
+    };
+  }
+
   render() {
+    // BACK END DATA
     const data1 = {
       labels: ["Tic Tac Toe", "Checkers"],
       datasets: [
@@ -53,6 +64,7 @@ class UserMain extends Component {
       responsive: true, maintainAspectRatio: false
     };
 
+    // BACK END DATA
     const data2 = {
       labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
       datasets: [
@@ -94,7 +106,7 @@ class UserMain extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">20</span>
+                <span className="green">{this.state.hoursPlayed}</span>
                 <br />
               </span>
               Hours Played
@@ -106,7 +118,7 @@ class UserMain extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">10</span> <br />
+                <span className="green">{this.state.streak}</span> <br />
               </span>
               Winning Game Streak
             </span>
@@ -117,7 +129,7 @@ class UserMain extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">10</span> <br />
+                <span className="green">{this.state.gamesPlayed}</span> <br />
               </span>
               Games Played
             </span>
