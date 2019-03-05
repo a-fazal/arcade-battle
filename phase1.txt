@@ -1,5 +1,4 @@
-Instructions: How to run
-
+How to Run
 You can clone the repo with
 git clone https://github.com/csc309-winter-2019/team17.git
 (or download as a zip)
@@ -12,8 +11,6 @@ And
 npm install
 npm start
 
-
-Features
 The first screen you should see when the web application is started is the login page.
 User Instructions and Features:
 -You can login with the default user (username: user, password: user), there is also an option to register.
