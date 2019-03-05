@@ -11,7 +11,7 @@ And
 npm install
 npm start
 
-The first screen you should see when the web application is started is the login page.
+A browser window should automatically open up. The first screen you should see when the web application is started is the login page.
 User Instructions and Features:
 -You can login with the default user (username: user, password: user), there is also an option to register.
 -For the user, you will see the main screen with some of their game stats in the center. 
