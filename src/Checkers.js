@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Doughnut, Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
 class Checkers extends Component {
   constructor(props){
@@ -63,7 +63,7 @@ class Checkers extends Component {
           ],
           borderWidth: 1,
           lineTension: 0
-        }, 
+        },
       ],
     };
 

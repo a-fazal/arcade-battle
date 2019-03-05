@@ -1,17 +1,11 @@
 import React, { Component } from "react";
-import avatar from "./avatar.jpeg";
 import "./App.css";
-import UserMain from "./UserMain";
 import Home from "./Home";
 import Admin from "./Admin";
-import Trophy from "./Trophy";
 import Login from "./Login";
-import TicTacToe from "./TicTacToe";
-import Checkers from "./Checkers";
 import Profile from "./Profile";
-import TicTacToeInGame from "./TicTacToeInGame";
 import UserProfile from "./UserProfile";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {

@@ -1,15 +1,7 @@
 import React, { Component } from "react";
-import avatar from "./avatar.jpeg";
 import "./App.css";
-import UserMain from "./UserMain";
 import User from "./User";
-import Trophy from "./Trophy";
-import TicTacToe from "./TicTacToe";
 import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
   withRouter
 } from "react-router-dom";
 
@@ -24,7 +16,7 @@ class Login extends Component {
       registeredAdmins: []
     };
     this.handleClick = this.handleClick.bind(this);
-    this.registerForm = this.registerForm.bind(this);
+    this.setLogin = this.setLogin.bind(this);
     this.state.registeredUsers.push(new User("user", "user"));
     this.state.registeredAdmins.push(new User("admin", "admin"));
   }
@@ -67,7 +59,7 @@ class Login extends Component {
       const user = document.querySelector("#userInput").value;
       const password = document.querySelector("#passwordInput").value;
       const confirmPassword = document.querySelector("#confirmPasswordInput").value;
-      if (confirmPassword != password) {
+      if (confirmPassword !== password) {
         alert('Passwords must match.')
       } else {
         let userExists = false;
@@ -89,9 +81,9 @@ class Login extends Component {
   }
 }
 
-  registerForm(e) {
+  setLogin(e) {
     e.preventDefault();
-    this.setState({ login: false });
+    this.setState({ login: !this.state.login });
   }
 
   render() {
@@ -150,13 +142,12 @@ class Login extends Component {
           </div>
           {this.state.login ? (
             <span id="registerSpan">
-              New?{" "}
-              <a href="" onClick={this.registerForm}>
+              New? <a href="_blank" onClick={this.setLogin}>
                 Register Now!
               </a>
             </span>
           ) : (
-            ""
+            <a href="_blank" onClick={this.setLogin}> Back to Login </a>
           )}
         </div>
       </div>
