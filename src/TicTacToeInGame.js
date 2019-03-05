@@ -91,10 +91,16 @@ onItemClick(e) {
 gameOverMessage(turn) {
   if (turn === this.state.me.symbol) {
     alert(this.state.me.username + " wins!");
-    this.state.me.winstreak++;
+    const me = this.state.me;
+    me.winstreak = this.state.me.winstreak + 1;
+    console.log(me);
+    this.setState({me: me});
   } else if (turn === this.state.them.symbol) {
     alert(this.state.them.username + " wins!");
-    this.state.them.winstreak++;
+    const them = this.state.them;
+    them.winstreak = this.state.them.winstreak + 1;
+    console.log(them);
+    this.setState({them: them});
   }
 }
 
