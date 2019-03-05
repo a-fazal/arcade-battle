@@ -35,6 +35,7 @@ class Login extends Component {
       const user = document.querySelector("#userInput").value;
       const password = document.querySelector("#passwordInput").value;
       let authenticated = false;
+      // Server call to backend for user/admin authentication
       for (let i = 0; i < this.state.registeredUsers.length; i++) {
         if (
           user === this.state.registeredUsers[i].user &&
@@ -47,6 +48,7 @@ class Login extends Component {
         }
       }
       for (let i = 0; i < this.state.registeredAdmins.length; i++) {
+        // Server call to backend for user/admin authentication
         if (
           user === this.state.registeredAdmins[i].user &&
           password === this.state.registeredAdmins[i].password
@@ -61,13 +63,31 @@ class Login extends Component {
         alert("Wrong password or username.");
       }
     } else {
+      // Server call to backend to add users for registration
       const user = document.querySelector("#userInput").value;
       const password = document.querySelector("#passwordInput").value;
-      this.state.registeredUsers.push(new User(user, password));
-      alert("Successfuly Registered! Please login.");
-      this.setState({ login: true });
+      const confirmPassword = document.querySelector("#confirmPasswordInput").value;
+      if (confirmPassword != password) {
+        alert('Passwords must match.')
+      } else {
+        let userExists = false;
+        for (let i = 0; i < this.state.registeredUsers.length; i++) {
+          if (
+            user === this.state.registeredUsers[i].user
+          ) {
+            alert('User already exists!');
+            userExists = true;
+            break;
+          }
+        }
+      if (!userExists) {
+        this.state.registeredUsers.push(new User(user, password));
+        alert("Successfuly Registered! Please login.");
+        this.setState({ login: true });
+      }
     }
   }
+}
 
   registerForm(e) {
     e.preventDefault();
