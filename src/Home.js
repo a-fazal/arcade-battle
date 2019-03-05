@@ -13,13 +13,22 @@ import UserProfile from "./UserProfile";
 class Home extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      gameHeader: false
+    };
     this.redirectToLogin = this.redirectToLogin.bind(this);
+    this.setGameHeader = this.setGameHeader.bind(this);
   }
 
   redirectToLogin(e) {
     e.preventDefault()
     this.props.history.push('/');
   }
+
+  setGameHeader(state) {
+    this.setState({ gameHeader: state });
+  }
+
 
   render() {
     return (
@@ -70,8 +79,8 @@ class Home extends Component {
               </div>
             </nav>
 
-            <div className="row" id="sidebarcontent">
-              <div className="col-sm-3" id="sidebarcontainer">
+            <div className={"row " + (this.state.gameHeader ? 'expandView' : '')} id="sidebarcontent">
+              <div className={"col-sm-3 " + (this.state.gameHeader ? 'none' : '')} id="sidebarcontainer">
                 <div id="sidebar">
                   <h3>GAMES</h3>
                   <br />
@@ -99,7 +108,7 @@ class Home extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-9" id="main">
+              <div className={(this.state.gameHeader ? 'col-sm-12' : 'col-sm-9')}id="main">
 
                 <Switch>
                   <Route exact path="/home" render={() => <UserMain user={this.props.user} />} />
@@ -107,7 +116,7 @@ class Home extends Component {
                   <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
                   <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
                   <Route exact path="/user" render={() => <Profile user={this.props.user} />} />
-                  <Route exact path="/tictactoeingame" render={() => <TicTacToeInGame user={this.props.user} />} />
+                  <Route exact path="/tictactoeingame" render={() => <TicTacToeInGame user={this.props.user} setGameHeader={this.setGameHeader} />} />
                   <Route exact path="/user/:id" render={(props) => <UserProfile user={this.props.user} {...props}/>} />
                 </Switch>
 

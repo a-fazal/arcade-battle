@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Doughnut, Line } from "react-chartjs-2";
-import { BrowserRouter as Router, Route, Link, Switch, withRouter  } from "react-router-dom";
+import { Line } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 
 
 class TicTacToe extends Component {
@@ -15,7 +15,6 @@ class TicTacToe extends Component {
   }
 
   render() {
-
     const options1 = {
       scales: {
         yAxes: [
@@ -29,7 +28,7 @@ class TicTacToe extends Component {
         xAxes: [
           {
             ticks: {
-              display: false //this will remove only the label
+              display: false
             }
           }
         ]

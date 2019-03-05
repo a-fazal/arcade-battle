@@ -4,7 +4,7 @@ import React, { Component } from "react";
 // simulated delay to find an opponent.
 var delay = 3;
 
-class TicTacToeInGame extends Component {  
+class TicTacToeInGame extends Component {
 constructor(props) {
    super(props)
    this.onItemClick = this.onItemClick.bind(this);
@@ -30,20 +30,12 @@ constructor(props) {
 }
 
 componentDidMount() {
-  const sidebar = document.querySelector('#sidebarcontainer');
-  sidebar.style.display = 'None';
-  const main = document.querySelector('#main');
-  main.classList.remove('col-sm-9');
-  main.classList.add('col-sm-12');
+  this.props.setGameHeader(true);
   this.checkForOpponent();
 }
 
 componentWillUnmount() {
-  const sidebar = document.querySelector('#sidebarcontainer');
-  sidebar.style.display = 'block';
-  const main = document.querySelector('#main');
-  main.classList.remove('col-sm-12');
-  main.classList.add('col-sm-9');
+  this.props.setGameHeader(false);
 }
 
 checkForOpponent() {
@@ -56,13 +48,13 @@ checkForOpponent() {
         username: "Sophia",
         winstreak: 21,
         id: 6,
-        symbol: 'x'  
+        symbol: 'x'
       },
       them: {
         username: "Alec",
         winstreak: 14,
         id: 14,
-        symbol: 'o'  
+        symbol: 'o'
       }
     };
   } else {
@@ -107,7 +99,7 @@ gameOverMessage(turn) {
 }
 
   checkForWin(spotsToCheck, turn, diagonal) {
-  if (!diagonal) { 
+  if (!diagonal) {
     const spots = Object.keys(this.state);
     const spotsResult = spots.filter(function (spot) { return spot.includes(spotsToCheck); });
     let i;
@@ -132,7 +124,7 @@ checkForEndGame(turn){
     this.gameOverMessage(turn);
     return;
   }
-  
+
   // Check vertical
   if (this.checkForWin('left', turn, false) || this.checkForWin('right', turn, false) || this.checkForWin('center', turn, false)) {
     this.setState({end: true});
@@ -154,7 +146,7 @@ checkForEndGame(turn){
     if (this.state[spots[i]] === 'empty') {
       this.setState({end: false});
       return;
-    }  
+    }
   }
   alert("Game over, it's a tie!");
   this.setState({end: true});
@@ -171,14 +163,14 @@ checkForEndGame(turn){
                 <div className="player-avatar"></div>
               </div>
             </div>
-            
+
             <div id="winstreaks">
               <div className="winstreak-label text-center">WINSTREAKS</div>
               <div className="winstreaks-amount text-center">
                 {this.state.me.winstreak}:{this.state.them.winstreak}
               </div>
             </div>
-            
+
             <div id="theirStats" className="player-stats">
               <div className="player-identity">
                 <div className="player-name text-center">{this.state.them.username}</div>
