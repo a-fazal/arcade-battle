@@ -25,7 +25,7 @@ User Instructions and Features:
 
 Admin Instructions and Features:
 -You can login with the admin (username: admin, password: admin)
--For the admins, there is an admin dashboard, here the admin can approve users, ban users, reinstate users, and modify users.
+-For the admin, there is an admin dashboard, here the admin can approve users, ban users, reinstate users, and modify users.
 -If you click on a user, you are taken to a page with detailed user stats for each game, from there you can choose to modify their user information.
 
 
