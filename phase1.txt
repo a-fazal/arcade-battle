@@ -14,8 +14,8 @@ npm start
 A browser window should automatically open up. The first screen you should see when the web application is started is the login page.
 User Instructions and Features:
 -You can login with the default user (username: user, password: user), there is also an option to register.
--For the user, you will see the main screen with some of their game stats in the center. 
--On the side is some games you can play, the main one we want to showcase for this phase is Tic-Tac-Toe.
+-For the user, you will see the main screen with their overall game stats in the center. 
+-On the side displays some game links, the main one we want to showcase for this phase is Tic-Tac-Toe. We will try to complete additional games such as Checkers afterward. 
 -If you click on Tic-Tac-Toe, you are taken to a start screen where you can see some specific stats for you about the game.
 -If you press start, then after an opponent is selected (just the view for Phase 1) the game will start.
   You can now play Tic-Tac-Toe on the game board and see your opponent on the left as well as win-streak stats in the center.
