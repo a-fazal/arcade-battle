@@ -793,3 +793,11 @@ body {
 	margin-top: 20px;
 	display: inline-block;
 }
+
+#changeName {
+	left: 10px;
+}
+
+.profile-changes-header {
+	color: #5df4b0;
+}
