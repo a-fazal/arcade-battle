@@ -9,6 +9,7 @@ class UserProfile extends Component {
     }
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
     this.goBack = this.goBack.bind(this);
+    this.goToProfile = this.goToProfile.bind(this);
   }
 
   componentDidMount() {
@@ -42,12 +43,18 @@ class UserProfile extends Component {
   
   goBack(e) {
     e.preventDefault()
-    console.log(this.props);
     if (this.props.user === "user") {
         this.props.history.push('/trophy');
     }
     else if (this.props.user === "admin") {
         this.props.history.push('/admin');
+    }
+  }
+
+  goToProfile(e) {
+    e.preventDefault();
+    if (this.props.user === "admin"){
+      this.props.history.push('/profile');
     }
   }
   
@@ -214,13 +221,16 @@ class UserProfile extends Component {
 
     return (
       <div id="userProfile">
-        <button className="back-button" onClick={this.goBack}>
+        <button className="profile-button" id="back-btn" onClick={this.goBack}>
           <i className="fas fa-chevron-left" />BACK
         </button>
         <div className="text-center">
           <h1 id="username">{data.username}</h1>
         </div>
-
+        {this.props.user === "admin" &&
+          <button className="profile-button" id="profile-btn" onClick={this.goToProfile}>
+        MODIFY<i className="fas fa-chevron-right" />
+        </button>}
 
         <h2 className="chartsLabel">OVERALL STATS</h2>
         <div className="row charts">
