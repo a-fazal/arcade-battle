@@ -18,13 +18,25 @@ class Profile extends Component {
     // MODIFY BACK END
     const oldPass = document.querySelector('#oldPass').value;
     const newPass = document.querySelector('#newPass').value;
-    if ((oldPass.length > 0 || newPass.length > 0) && oldPass === this.state.password) {
-      alert('Succesfully changed password!');
+    const confirmPass = document.querySelector('#confirmPass').value;
+    if (oldPass.length > 0 && newPass.length > 0 && confirmPass.length > 0) {
+      if (oldPass === this.state.password && newPass === confirmPass && newPass === this.state.password) {
+        alert('You cannot use the old password.');
+      } else if (oldPass === this.state.password && newPass === confirmPass && newPass !== this.state.password) {
+        alert('Succesfully changed your password!');
+        this.setState({password: newPass});
+      } else if (oldPass !== this.state.password) {
+        alert("Your old password doesn't match.");
+      } else if (confirmPass !== newPass) {
+        alert("Confirm your new password again.");
+      }
     } else {
-      if (oldPass.length === 0 || newPass.length === 0){
-        alert('Invalid password');
-      } else {
-        alert('Incorrect old password, unable to change');
+      if (oldPass.length === 0){
+        alert('Enter your old password.');
+      } else if (newPass.length === 0) {
+        alert('Enter your new password.');
+      } else if (confirmPass.length === 0) {
+        alert('Confirm your new password.');
       }
     }
   }
@@ -68,6 +80,7 @@ class Profile extends Component {
       		<div className="col-5 profile-changes">
       			<span className="profile-changes-header">Change username</span>
       			<form>
+            <br />
       			New username<br/>
       			<input type="text" className="form-control" id="nameInput" placeholder="Enter username"/>
       			<br/>
@@ -87,6 +100,9 @@ class Profile extends Component {
       			New password<br/>
       			<input type="text" className="form-control" id="newPass" placeholder="Enter new password"/>
       			<br />
+            Confirm new password<br />
+            <input type="text" className="form-control" id="confirmPass" placeholder="Confirm password"/>
+            <br />
       			</form>
             <button type="button" className="btn btn-primary" id="change-password-btn" onClick={this.changePassword}>Submit</button>
       		</div>
