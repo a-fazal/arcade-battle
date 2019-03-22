@@ -20,7 +20,16 @@ cd team17
 And
 ```
 npm install
-npm start
 ```
+```
+cd client
+npm install
+```
+Then
+```
+cd ..
+npm run dev
+```
+
 
 
