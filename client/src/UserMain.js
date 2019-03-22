@@ -8,9 +8,32 @@ class UserMain extends Component {
     this.state = {
       hoursPlayed: 9,
       streak: 20,
-      gamesPlayed: 10
+      gamesPlayed: 10,
+      test: ''
     };
+    this.getTest = this.getTest.bind(this);
   }
+
+  componentDidMount() {
+    this.getTest()
+  }
+
+  getTest(event) {
+      fetch('/test').then((response) => {
+          if (response.status !== 200) {
+              throw new Error(response.statusText);
+          } else {
+              return response.json();
+          }
+      }).then((json) => {
+          this.setState({
+              test: json['testMessage']
+          });
+      }).catch((err) => {
+          alert(err.message)
+      });
+    }
+
 
   render() {
     // BACK END DATA
@@ -96,6 +119,8 @@ class UserMain extends Component {
           <h2>
             Welcome back,
             <br /> {this.props.user}
+
+            {this.state.test}
           </h2>
         </div>
 
