@@ -31,5 +31,5 @@ cd ..
 npm run dev
 ```
 
-
+You must also put a .env file in the root folder in order to connect to the database.
 
