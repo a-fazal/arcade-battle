@@ -3,6 +3,7 @@
 const log = console.log
 
 const express = require('express')
+const path = require("path")
 const port = process.env.PORT || 5000
 const bodyParser = require('body-parser') // middleware for parsing HTTP body
 const { ObjectID } = require('mongodb')
@@ -15,10 +16,11 @@ const { User } = require('./models/user')
 const app = express();
 app.use(bodyParser.json())
 
-// 
+//
 // app.get('/test', (req, res) => {
 //   res.send({ testMessage: 'testing' });
 // });
+
 
 app.get('/allusers', (req, res) => {
   User.find({}).select({ "password": 0}).then(function (users) {
@@ -32,6 +34,12 @@ app.get('/allusers', (req, res) => {
 })
 });
 
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+// Handle React routing, return all requests to React app
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 
 app.listen(port, () => {
