@@ -34,11 +34,11 @@ app.get('/allusers', (req, res) => {
 })
 });
 
-
-app.use(express.static(path.join(__dirname, 'client/build')));
-// Handle React routing, return all requests to React app
+// Deploying to Heroku, followed parts from
+// tutorial https://coursework.vschool.io/deploying-mern-with-heroku/
+app.use(express.static(path.join(__dirname, "client", "build")));
 app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 
