@@ -31,6 +31,7 @@ class App extends Component {
             <Route exact path="/tictactoeingame" render={() => <Home user={this.state.user} />} />
             <Route exact path="/trophy" render={() => <Home user={this.state.user} />} />
             <Route exact path="/checkers" render={() => <Home user={this.state.user} />} />
+            <Route exact path="/checkersingame" render={() => <Home user={this.state.user} />} />
             <Route exact path="/profile" render={() => <Profile user={this.props.user} />} />
             <Route exact path="/admin" render={(props) => <Admin user={this.state.user} {...props} />} />
             <Route exact path="/user/:id" render={(props) => <UserProfile user={this.state.user} {...props}/>} />

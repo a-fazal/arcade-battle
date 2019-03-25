@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Line } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 
 class Checkers extends Component {
   constructor(props){
@@ -108,11 +109,11 @@ class Checkers extends Component {
 
         <div className="row">
       		<div className="col-sm-4 text-center">
-      		<a href="">
+      		<Link to="/checkersingame">
       			<div className="navbar-brand" id="start-button">
       			Start Game<br /><i class="fas fa-play icon-gradient"></i>
       			</div>
-      			</a>
+      			</Link>
       		</div>
       	</div>
 
