@@ -1,6 +1,6 @@
 # team17
 
-## Instructions: How to run & develop
+## Instructions: How to run locally & develop
 
 You can clone the repo with
 
