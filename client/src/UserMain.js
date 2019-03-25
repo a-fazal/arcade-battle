@@ -8,9 +8,12 @@ class UserMain extends Component {
     this.state = {
       hoursPlayed: 9,
       streak: 20,
-      gamesPlayed: 10
+      gamesPlayed: 10,
+      test: ''
     };
+
   }
+
 
   render() {
     // BACK END DATA
@@ -96,6 +99,7 @@ class UserMain extends Component {
           <h2>
             Welcome back,
             <br /> {this.props.user}
+
           </h2>
         </div>
 

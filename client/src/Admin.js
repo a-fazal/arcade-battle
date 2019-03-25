@@ -21,58 +21,46 @@ class Admin extends Component {
     this.fetchPendingUsers();
     this.fetchActiveUsers();
   }
-  
+
   logout() {
     this.props.history.push('/');
   }
 
   fetchActiveUsers() {
-    // BACKEND CALL
+        fetch('/allusers').then((response) => {
+            if (response.status !== 200) {
+                throw new Error(response.statusText);
+            } else {
+                return response.json();
+            }
+        }).then((json) => {
+            const data = json.filter(user => user.isPending === false);
+            this.setState({
+                active: data
+            });
+        }).catch((err) => {
+            alert(err.message)
+        });
 
-    const data = [
-        {
-          username: "Alec",
-          id: 5,
-          banned: false
-        },
-        {
-          username: "Anusha",
-          id: 8,
-          banned: false
-        },
-        {
-          username: "Sophia",
-          id: 13,
-          banned: false
-        }
-      ]
-    this.setState({active: data});
   }
-  
+
   fetchPendingUsers() {
-    // BACKEND CALL
-
-    const data = [
-        {
-          username: "gibdalf",
-          id: 102
-        },
-        {
-          username: "dude",
-          id: 104
-        },
-        {
-          username: "skrrrr",
-          id: 108
-        },
-        {
-          username: "brapbrap",
-          id: 126
+    fetch('/allusers').then((response) => {
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        } else {
+            return response.json();
         }
-      ]
-    this.setState({pending: data});
+    }).then((json) => {
+        const data = json.filter(user => user.isPending === true);
+        this.setState({
+            pending: data
+        });
+    }).catch((err) => {
+        alert(err.message)
+    });
   }
-  
+
   acceptPendingUser(id) {
     // MODIFY BACK END
     return (function() {
@@ -82,24 +70,24 @@ class Admin extends Component {
           idx = i;
         }
       }
-      
+
       const user = this.state.pending[idx];
       user.banned = false;
       const active = this.state.active;
       active.push(user);
-      
+
       this.setState({pending: this.state.pending.filter(elem => elem.id !== id)});
       this.setState({active: active});
     }).bind(this);
   }
-  
+
   denyPendingUser(id) {
     // MODIFY BACK END
     return (function() {
       this.setState({pending: this.state.pending.filter(elem => elem.id !== id)});
     }).bind(this);
   }
-  
+
   banUser(id) {
     // MODIFY BACK END
     return (function(e) {
@@ -113,7 +101,7 @@ class Admin extends Component {
       this.setState({active: active});
     }).bind(this);
   }
-  
+
   reinstateUser(id) {
     // MODIFY BACKEND
     return (function(e) {
@@ -127,7 +115,7 @@ class Admin extends Component {
       this.setState({active: active});
     }).bind(this);
   }
-  
+
   render() {
     return (
       <div id="admin-dashboard">
