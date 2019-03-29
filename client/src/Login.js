@@ -18,6 +18,7 @@ class Login extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.setLogin = this.setLogin.bind(this);
     this.state.registeredUsers.push(new User("user", "user"));
+    this.state.registeredUsers.push(new User("user2", "user2"));
     this.state.registeredAdmins.push(new User("admin", "admin"));
   }
 

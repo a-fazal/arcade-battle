@@ -91,6 +91,47 @@ app.patch('/currentgame/:id', (req, res) => {
     )
 })
 
+app.get('/currentgamemoves/:id', (req, res) => {
+	const id = req.params.id;
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()
+	}
+
+    CurrentGame.findById(id).then((currentgame) => {
+      if (!currentgame) {
+        res.status(404).send()
+      } else {
+        res.send(currentgame.moves);
+      }
+    }).catch((error) => {
+      res.status(500).send()
+    })
+})
+
+app.patch('/currentgamemoves/:id', (req, res) => {
+	const id = req.params.id
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()
+	}
+  log(req.body)
+    CurrentGame.findById(id).then((currentgame) => {
+      if (!currentgame) {
+        res.status(404).send()
+      } else {
+        const moves = currentgame.moves
+        moves.set(req.body);
+        currentgame.save().then((currentgame) => {
+          res.send(currentgame)
+        }, (error) => {
+          res.status(400).send(error)
+        })
+
+      }
+    }).catch((error) => {
+      res.status(500).send()
+    })
+})
+
 // Deploying to Heroku, followed parts from
 // tutorial https://coursework.vschool.io/deploying-mern-with-heroku/
 app.use(express.static(path.join(__dirname, "client", "build")));

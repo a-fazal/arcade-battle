@@ -21,12 +21,14 @@ class TicTacToeInGame extends Component {
       "bottom-right-ttt": "empty",
       me: null,
       them: null,
+      _id: null,
       end: false
     };
     this.checkForOpponent = this.checkForOpponent.bind(this);
     this.checkForEndGame = this.checkForEndGame.bind(this);
     this.checkForWin = this.checkForWin.bind(this);
     this.gameOverMessage = this.gameOverMessage.bind(this);
+    this.checkForGameStateChange = this.checkForGameStateChange.bind(this);
   }
 
   componentDidMount() {
@@ -116,7 +118,8 @@ class TicTacToeInGame extends Component {
               symbol: "o"
             }
           };
-          this.setState({ me: data.me, them: data.them });
+          this.setState({ me: data.me, them: data.them, _id: json._id });
+          this.checkForGameStateChange();
         } else if (json.playerOne !== "" && json.playerTwo !== "") {
           data = {
             me: {
@@ -132,7 +135,8 @@ class TicTacToeInGame extends Component {
               symbol: "o"
             }
           };
-          this.setState({ me: data.me, them: data.them });
+          this.setState({ me: data.me, them: data.them, _id: json._id });
+          this.checkForGameStateChange();
         } else {
           setTimeout(this.checkForOpponent, 1000);
         }
@@ -145,20 +149,91 @@ class TicTacToeInGame extends Component {
       });
   }
 
+  checkForGameStateChange() {
+    const url = '/currentgamemoves/' + this.state._id;
+    fetch(url)
+    .then((res) => {
+        if (res.status === 200) {
+           return res.json()
+       } else {
+            alert('Error')
+       }
+    })
+    .then((json) => {
+        delete json['_id'];
+        this.setState(json);
+    }).catch((error) => {
+        console.log(error)
+    })
+
+    setTimeout(this.checkForGameStateChange, 500);
+
+  }
+
   onItemClick(e) {
     e.preventDefault();
     if (!this.state.end && this.state[e.currentTarget.id] === "empty") {
       if (this.state.turn === "o") {
         const turn = this.state.turn;
+
+        const url = "/currentgamemoves/" + this.state._id;
+        const currentPos = e.currentTarget.id
+        let dataSend = {
+
+        };
+        dataSend[currentPos] = "o"
+        const request = new Request(url, {
+          method: "PATCH",
+          body: JSON.stringify(dataSend),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          }
+        });
+
+        fetch(request)
+          .then(function(res) {
+
+          })
+          .catch(error => {
+            console.log(error);
+          });
+
         this.setState({ [e.currentTarget.id]: "o" }, () => {
           this.checkForEndGame(turn);
         });
+
         this.setState({ turn: "x" });
       } else {
         const turn = this.state.turn;
+
+        const url = "/currentgamemoves/" + this.state._id;
+        const currentPos = e.currentTarget.id
+        let dataSend = {
+
+        };
+        dataSend[currentPos] = "x"
+        const request = new Request(url, {
+          method: "PATCH",
+          body: JSON.stringify(dataSend),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          }
+        });
+
+        fetch(request)
+          .then(function(res) {
+
+          })
+          .catch(error => {
+            console.log(error);
+          });
+
         this.setState({ [e.currentTarget.id]: "x" }, () => {
           this.checkForEndGame(turn);
         });
+
         this.setState({ turn: "o" });
       }
     }
