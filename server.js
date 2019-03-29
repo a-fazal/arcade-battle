@@ -10,6 +10,7 @@ const { ObjectID } = require("mongodb");
 const { mongoose } = require("./db/mongoose");
 
 const { User } = require("./models/user");
+const { CurrentGame } = require("./models/currentgame");
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,6 +34,62 @@ app.get("/allusers", (req, res) => {
       res.status(500).send();
     });
 });
+
+app.get("/getopponent/:game", (req, res) => {
+  const game = req.params.game
+  CurrentGame.findOne({})
+    .where('game').equals('tictactoe')
+    .then(function(currentgame) {
+      if (!currentgame) {
+        res.status(404).send();
+      } else {
+        res.send(currentgame);
+      }
+    })
+    .catch(error => {
+      res.status(500).send();
+    });
+});
+
+app.post('/currentgame', (req, res) => {
+
+	const currentgame = new CurrentGame({
+		"startTime":"",
+    "playerOne":req.body.playerOne,
+    "playerTwo":"",
+    "turn":"x",
+    "startOfLastTurn":"",
+    "game":req.body.game,
+    "moves":
+    {"top-left-ttt":"empty","top-center-ttt":"empty","top-right-ttt":"empty","middle-left-ttt":"empty","middle-center-ttt":"empty","middle-right-ttt":"empty","bottom-left-ttt":"empty","bottom-center-ttt":"empty","bottom-right-ttt":"empty"}
+	})
+
+	currentgame.save().then((currentgame) => {
+		res.send(currentgame)
+	}, (error) => {
+    log(error)
+		res.status(400).send(error)
+	})
+
+})
+
+app.patch('/currentgame/:id', (req, res) => {
+	const id = req.params.id
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()
+	}
+  CurrentGame.findByIdAndUpdate(
+      id,
+      req.body,
+      (err, currentgame) => {
+          if (err) {
+            return res.status(500).send(err);
+          } else {
+              return res.send(currentgame);
+          }
+        }
+    )
+})
 
 // Deploying to Heroku, followed parts from
 // tutorial https://coursework.vschool.io/deploying-mern-with-heroku/
