@@ -154,19 +154,30 @@ class TicTacToeInGame extends Component {
     fetch(url)
     .then((res) => {
         if (res.status === 200) {
-           return res.json()
+           return res.json();
        } else {
             alert('Error')
        }
     })
     .then((json) => {
-        delete json['_id'];
-        this.setState(json);
+        if (this.state["top-left-ttt"] !== json['top-left-ttt'] || this.state["top-center-ttt"] !== json['top-center-ttt']
+        || this.state["top-right-ttt"] !== json['top-right-ttt'] || this.state["middle-left-ttt"] !== json['middle-left-ttt'] || this.state["middle-center-ttt"] !== json['middle-center-ttt']
+        || this.state["middle-right-ttt"] !== json['middle-right-ttt'] || this.state["bottom-left-ttt"] !== json['bottom-left-ttt'] || this.state["bottom-center-ttt"] !== json['bottom-center-ttt']
+        || this.state["bottom-right-ttt"] !== json['bottom-right-ttt']) {
+          delete json['_id'];
+          this.setState(json);
+          if (this.state.turn === "o") {
+            this.setState({ turn: "x" });
+          } else {
+            this.setState({ turn: "o" });
+          }
+        }
+
     }).catch((error) => {
         console.log(error)
     })
 
-    setTimeout(this.checkForGameStateChange, 500);
+    setTimeout(this.checkForGameStateChange, 200);
 
   }
 

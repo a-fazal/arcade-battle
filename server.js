@@ -67,7 +67,7 @@ app.post('/currentgame', (req, res) => {
 	currentgame.save().then((currentgame) => {
 		res.send(currentgame)
 	}, (error) => {
-    log(error)
+
 		res.status(400).send(error)
 	})
 
@@ -113,7 +113,6 @@ app.patch('/currentgamemoves/:id', (req, res) => {
 	if (!ObjectID.isValid(id)) {
 		res.status(404).send()
 	}
-  log(req.body)
     CurrentGame.findById(id).then((currentgame) => {
       if (!currentgame) {
         res.status(404).send()
