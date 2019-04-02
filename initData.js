@@ -8,7 +8,7 @@ const INIT_USERS = [
         username: "user",
         password: "user",
         role: "user",
-        URI: "",
+        uri: "pic-URL",
         isBanned: false,
         isPending: false
     }),
@@ -17,7 +17,7 @@ const INIT_USERS = [
         username: "user2",
         password: "user2",
         role: "user",
-        URI: "",
+        uri: "pic-URL",
         isBanned: false,
         isPending: false
     }),
@@ -26,7 +26,7 @@ const INIT_USERS = [
         username: "admin",
         password: "admin",
         role: "admin",
-        URI: "",
+        uri: "pic-URL",
         isBanned: false,
         isPending: false
     }),
@@ -35,7 +35,7 @@ const INIT_USERS = [
         username: "userpending",
         password: "userpending",
         role: "user",
-        URI: "",
+        uri: "pic-URL",
         isBanned: false,
         isPending: true
     }),
@@ -44,7 +44,7 @@ const INIT_USERS = [
         username: "userbanned",
         password: "userbanned",
         role: "user",
-        URI: "",
+        uri: "pic-URL",
         isBanned: true,
         isPending: false
     })
