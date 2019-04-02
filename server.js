@@ -95,8 +95,8 @@ app.get("/allusers", (req, res) => {
         res.send(users);
       }
     })
-    .catch(error => {
-      res.status(500).send();
+    .catch(err => {
+      res.status(500).send(err);
     });
 });
 
@@ -113,6 +113,20 @@ app.patch("/user/:id/updatepass", (req, res) => {
     }).catch((err) => {
       res.status(500).send(err);
     })
+  }
+})
+
+app.patch("/user/:id/updatename", (req, res) => {
+  const id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+  } else {
+    User.findByIdAndUpdate(
+      id,
+      {username: req.body.newName}
+    ).then((user) => {
+      res.send(user);
+    }).catch(())
   }
 })
 
