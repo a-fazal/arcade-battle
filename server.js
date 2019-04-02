@@ -126,7 +126,9 @@ app.patch("/user/:id/updatename", (req, res) => {
       {username: req.body.newName}
     ).then((user) => {
       res.send(user);
-    }).catch(())
+    }).catch((err) => {
+      res.status(500).send(err);
+    })
   }
 })
 
