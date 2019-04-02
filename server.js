@@ -71,6 +71,20 @@ app.post('/resetdata', (req, res) => {
 
 /*  USER ENDPOINTS  */
 
+app.get(/user/:id, (req, res) => {
+  const id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+  } else {
+    User.findById(id)
+      .then((user) => {
+        res.send(user);
+      }).catch((err) => {
+        res.status(500).send(err);
+      })
+  }
+})
+
 app.get("/allusers", (req, res) => {
   User.find({})
     .select({ password: 0 })
@@ -85,6 +99,22 @@ app.get("/allusers", (req, res) => {
       res.status(500).send();
     });
 });
+
+app.patch("/user/:id/updatepass", (req, res) => {
+  const id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+  } else {
+    User.findByIdAndUpdate(
+      id,
+      {password: req.body.newPass}
+    ).then((user) => {
+      res.send(user);
+    }).catch((err) => {
+      res.status(500).send(err);
+    })
+  }
+})
 
 app.patch("/user/:id/accept", (req, res) => {
   const id = req.params.id
