@@ -27,12 +27,17 @@ app.use(bodyParser.json());
 // Delete all model objects
 // add test data to the database
 app.post('/resetdata', (req, res) => {
+  CurrentGame.deleteMany()
   User.deleteMany()
     .then(function () {
-      INIT_USERS.forEach((u) => { u.save() })
+      User.create(INIT_USERS)
+        .then(users => {
+          res.send(users);
+        })
+        .catch(error => {
+          res.status(500).send();
+        })
     })
-  CurrentGame.deleteMany()
-  res.status(200).send();
 })
 
 /*  USER ENDPOINTS  */
@@ -56,51 +61,76 @@ app.patch("/user/:id/accept", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
+  } else {
+    User.findByIdAndUpdate(
+      id,
+      { isPending: false },
+      { new: true })
+      .then(function (user) {
+        res.send(user);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
   }
-  User.findByIdAndUpdate(
-    id,
-    { isPending: false },
-    { new: true })
-    .then(function (user) {
-      res.send(user);
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    })
+})
+
+app.patch("/user/:id/deny", (req, res) => {
+  const id = req.params.id
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send()
+  } else {
+    User.findById(id)
+      .then(function (user) {
+        if (user.isPending) {
+          user.remove()
+            .then(() => {
+              res.status(200).send();
+            })
+        } else {
+          res.status(500).send({ "msg": "Cannot delete users once they have been accepted" })
+        }
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
+  }
 })
 
 app.patch("/user/:id/ban", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
+  } else {
+    User.findByIdAndUpdate(
+      id,
+      { isBanned: true },
+      { new: true })
+      .then(function (user) {
+        res.send(user);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
   }
-  User.findByIdAndUpdate(
-    id,
-    { isBanned: true },
-    { new: true })
-    .then(function (user) {
-      res.send(user);
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    })
 })
 
 app.patch("/user/:id/reinstate", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
+  } else {
+    User.findByIdAndUpdate(
+      id,
+      { isBanned: false },
+      { new: true })
+      .then(function (user) {
+        res.send(user);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
   }
-  User.findByIdAndUpdate(
-    id,
-    { isBanned: false },
-    { new: true })
-    .then(function (user) {
-      res.send(user);
-    })
-    .catch(err => {
-      res.status(500).send(err);
-    })
 })
 
 /*  GAMEPLAY ENDPOINTS  */

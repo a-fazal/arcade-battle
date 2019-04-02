@@ -45,3 +45,8 @@ git push heroku master
 ```
 
 Find the web app at: arcade-battle.herokuapp.com
+
+## Instructions: Data initialization
+Data is initialized programmatically by sending a POST request to our '/resetdata' endpoint
+
+All objects to be loaded into MongoDB are stored in initData.js
