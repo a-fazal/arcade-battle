@@ -12,6 +12,7 @@ const { mongoose } = require("./db/mongoose");
 
 const { User } = require("./models/user");
 const { CurrentGame } = require("./models/currentgame");
+const { CompleteGame } = require("./models/completegame");
 
 const { INIT_USERS } = require('./initData');
 
