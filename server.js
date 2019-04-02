@@ -71,7 +71,7 @@ app.post('/resetdata', (req, res) => {
 
 /*  USER ENDPOINTS  */
 
-app.get(/user/:id, (req, res) => {
+app.get("/user/:id", (req, res) => {
   const id = req.params.id;
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
