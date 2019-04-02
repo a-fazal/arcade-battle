@@ -78,30 +78,52 @@ class Admin extends Component {
   }
 
   banUser(id) {
-    // MODIFY BACK END
     return (function (e) {
       e.preventDefault();
-      const active = this.state.active;
-      active.forEach(function (user) {
-        if (user.id === id) {
-          user.banned = true;
+      fetch(`/user/${id}/ban`, { method: 'PATCH' }).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
         }
+      }).then((user) => {
+        const active = this.state.active;
+        let idx = null;
+        active.forEach(function (u, index) {
+          if (u._id === id) {
+            idx = index;
+          }
+        });
+        active[idx] = user;
+        this.setState({ active: active });
+      }).catch((err) => {
+        alert(err.message)
       });
-      this.setState({ active: active });
     }).bind(this);
   }
 
   reinstateUser(id) {
-    // MODIFY BACKEND
     return (function (e) {
       e.preventDefault();
-      const active = this.state.active;
-      active.forEach(function (user) {
-        if (user.id === id) {
-          user.banned = false;
+      fetch(`/user/${id}/reinstate`, { method: 'PATCH' }).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
         }
+      }).then((user) => {
+        const active = this.state.active;
+        let idx = null;
+        active.forEach(function (u, index) {
+          if (u._id === id) {
+            idx = index;
+          }
+        });
+        active[idx] = user;
+        this.setState({ active: active });
+      }).catch((err) => {
+        alert(err.message)
       });
-      this.setState({ active: active });
     }).bind(this);
   }
 
@@ -129,18 +151,18 @@ class Admin extends Component {
             ACTIVE USERS
           </div>
           {this.state.active.map(user =>
-            <Link to={"/user/" + user.id}>
+            <Link to={"/user/" + user._id}>
               <div className="active-user">
                 <div className="user-description">
                   <div className="text-center">{user.username}</div>
                 </div>
                 <div className="user-avatar"></div>
                 <div className="user-buttons-container text-center">
-                  {user.banned ?
+                  {user.isBanned ?
                     <button className="reinstate-user" onClick={this.reinstateUser(user._id)}>REINSTATE</button>
                     : <button className="ban-user" onClick={this.banUser(user._id)}>BAN</button>}
                 </div>
-                {user.banned && <div className="user-banned">BANNED</div>}
+                {user.isBanned && <div className="user-banned">BANNED</div>}
               </div>
             </Link>
           )}
