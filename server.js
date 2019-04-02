@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.post('/resetdata', (req, res) => {
   User.deleteMany()
     .then(function () {
-      INIT_USERS.forEach((u) => {u.save()})
+      INIT_USERS.forEach((u) => { u.save() })
     })
   CurrentGame.deleteMany()
   res.status(200).send();
@@ -52,59 +52,56 @@ app.get("/allusers", (req, res) => {
     });
 });
 
-app.post("/acceptuser/:id"), (req, res) => {
+app.patch("/user/:id/accept", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
   }
   User.findByIdAndUpdate(
     id,
-    {isPending: false},
-    (err, user) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.send(user);
-      }
-    }
-  )
-}
+    { isPending: false },
+    { new: true })
+    .then(function (user) {
+      res.send(user);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
 
-app.post("/banuser/:id"), (req, res) => {
+app.patch("/user/:id/ban", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
   }
   User.findByIdAndUpdate(
     id,
-    {isBanned: true},
-    (err, user) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.send(user);
-      }
-    }
-  )
-}
+    { isBanned: true },
+    { new: true })
+    .then(function (user) {
+      res.send(user);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
 
-app.post("/reinstateuser/:id"), (req, res) => {
+app.patch("/user/:id/reinstate", (req, res) => {
   const id = req.params.id
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
   }
   User.findByIdAndUpdate(
     id,
-    {isBanned: false},
-    (err, user) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.send(user);
-      }
-    }
-  )
-}
+    { isBanned: false },
+    { new: true })
+    .then(function (user) {
+      res.send(user);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
+})
 
 /*  GAMEPLAY ENDPOINTS  */
 
