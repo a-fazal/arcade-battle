@@ -1,5 +1,8 @@
 'use strict';
 
+const { User } = require("./models/user");
+const { CurrentGame } = require("./models/currentgame");
+
 const INIT_USERS = [
     new User({
         username: "user",
