@@ -190,7 +190,8 @@ app.get("/user/:id/stats", (req, res) => {
             }
             let winStreak = {
               "Tic-Tac-Toe": 0,
-              "Checkers": 0
+              "Checkers": 0,
+              "Overall": 0
             }
             let winPercent = {
               "Tic-Tac-Toe": [],
@@ -207,9 +208,11 @@ app.get("/user/:id/stats", (req, res) => {
             while (i < games.length) {
               if (games[i].winner === user.username) {
                 winStreak[games[i].game] += 1
+                winStreak["Overall"] += 1
                 winCount[games[i].game] += 1
               } else {
                 winStreak[games[i].game] = 0
+                winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
               timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
@@ -220,13 +223,81 @@ app.get("/user/:id/stats", (req, res) => {
             winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
             winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
 
-            res.send({ timePlayed, gamesPlayed, winStreak, winPercent })
+            res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
       .catch(err => {
         res.status(500).send(err);
       })
   }
+})
+
+app.get("/currentuser/stats", (req, res) => {
+    // TODO: get the currently logged in user's id
+    const id = "5ca300727c3d0b6d2bee77ae"
+    
+    // Needed:
+    // hours played (itemized by game)
+    // games played (itemized by game)
+    // current win streak
+    User.findById(id)
+      .then(function (user) {
+        CompleteGame.find()
+          .or([{ playerOne: user.username }, { playerTwo: user.username }])
+          .sort({ endTime: 'ascending' })
+          .exec((err, games) => {
+            if (err) {
+              return res.status(500).send(err);
+            }
+            let timePlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let gamesPlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let winStreak = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0,
+              "Overall": 0
+            }
+            let winPercent = {
+              "Tic-Tac-Toe": [],
+              "Checkers": []
+            }
+
+            // used to calculate historic win percentages
+            let winCount = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+
+            let i = 0
+            while (i < games.length) {
+              if (games[i].winner === user.username) {
+                winStreak[games[i].game] += 1
+                winStreak["Overall"] += 1
+                winCount[games[i].game] += 1
+              } else {
+                winStreak[games[i].game] = 0
+                winStreak["Overall"] = 0
+              }
+              gamesPlayed[games[i].game] += 1
+              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
+              i++;
+            }
+
+            winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
+            winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
+
+            res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
+          })
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
 })
 
 /*  GAMEPLAY ENDPOINTS  */

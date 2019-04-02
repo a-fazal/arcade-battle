@@ -8,14 +8,71 @@ class TicTacToe extends Component {
     super(props);
     // BACK END DATA
     this.state = {
-      hoursPlayed: 9,
-      winPercentage: 50,
-      gamesPlayed: 10
-    };
+      userData: null
+    }
+    
+    this.fetchUserInfo = this.fetchUserInfo.bind(this);
+  }
+  
+  componentDidMount() {
+    this.fetchUserInfo();
+  }
+
+  fetchUserInfo() {
+      // BACKEND CALL
+      fetch(`/currentuser/stats`).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      }).then((json) => {
+        const data = {
+          username: json.username,
+          winstreak: json.winStreak["Overall"],
+          hoursPlayed: (json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000),
+          gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"] + json.gamesPlayed["Checkers"],
+          checkersStats: {
+            hoursPlayed: json.timePlayed["Checkers"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Checkers"],
+            winPercent: json.winPercent["Checkers"].map(elem => (elem * 100).toFixed(1))
+          },
+          tictactoeStats: {
+            hoursPlayed: json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"],
+            winPercent: json.winPercent["Tic-Tac-Toe"].map(elem => (elem * 100).toFixed(1))
+          }
+        }
+        this.setState({ userData: data });
+      }).catch((err) => {
+        alert(err.message)
+      });
   }
 
   render() {
-    const options1 = {
+    const data = this.state.userData;
+
+    if (!data) {
+      return (<div>LOADING</div>);
+    }
+    
+    const lineDataTicTacToe = {
+      labels: [
+        '4 Games Ago', '3 Games Ago', 
+        '2 Games Ago', '1 Game Ago', 
+        'Current'
+      ],
+      datasets: [
+        {
+          label: 'Win Percent',
+          data: data.tictactoeStats.winPercent,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "rgba(75,192,192,1)"
+        }
+      ]
+    };
+
+    const options = {
       scales: {
         yAxes: [
           {
@@ -28,7 +85,7 @@ class TicTacToe extends Component {
         xAxes: [
           {
             ticks: {
-              display: false
+              display: false //this will remove only the label
             }
           }
         ]
@@ -37,35 +94,6 @@ class TicTacToe extends Component {
         display: false
       },
       responsive: true, maintainAspectRatio: false
-    };
-
-    // BACK END DATA
-    const data1 = {
-      type: "line",
-      labels: ["W", "L", "L", "W", "W", "L"],
-      datasets: [
-        {
-          data: [100, 50, 33.3, 50, 60, 50, ],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1,
-          lineTension: 0
-        },
-      ],
     };
 
     return (
@@ -80,7 +108,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{this.state.hoursPlayed}</h1></span>
+                <span className="green"><h1>{data.hoursPlayed}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -88,11 +116,11 @@ class TicTacToe extends Component {
           </div>
           <div className="col-sm-4">
           <div className="chart-container">
-            <Line data={data1} options={options1} />
+            <Line data={lineDataTicTacToe} options={options} />
             </div>
             <span>
               <span className="stats">
-                <span className="green">{this.state.winPercentage}%</span> <br />
+                <span className="green">{data.tictactoeStats.winPercent.slice(-1).pop() + "%"}</span> <br />
               </span>
               Win Percentage
             </span>
@@ -100,7 +128,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{this.state.gamesPlayed}</h1></span> <br />
+                <span className="green"><h1>{data.gamesPlayed}</h1></span> <br />
               </span>
               Games Played
             </span>

@@ -20,44 +20,53 @@ class UserProfile extends Component {
     const id = this.props.match ? this.props.match.params.id : null;
     if (id) {
       // BACKEND CALL
-
-      const data = {
-        username: "Alec",
-        winstreak: 14,
-        hoursPlayed: 40,
-        gamesPlayed: 120,
-        checkersStats: {
-          hoursPlayed: 10,
-          gamesPlayed: 20,
-          winPercent: [100, 50, 33.3, 50, 60, 50]
-        },
-        tictactoeStats: {
-          hoursPlayed: 30,
-          gamesPlayed: 100,
-          winPercent: [20, 50, 83.3, 60, 90, 85]
+      fetch(`/user/${id}/stats`).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
         }
-      }
-      this.setState({ userData: data });
+      }).then((json) => {
+        const data = {
+          username: json.username,
+          winstreak: json.winStreak["Overall"],
+          hoursPlayed: (json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000),
+          gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"] + json.gamesPlayed["Checkers"],
+          checkersStats: {
+            hoursPlayed: json.timePlayed["Checkers"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Checkers"],
+            winPercent: json.winPercent["Checkers"].map(elem => (elem * 100).toFixed(1))
+          },
+          tictactoeStats: {
+            hoursPlayed: json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"],
+            winPercent: json.winPercent["Tic-Tac-Toe"].map(elem => (elem * 100).toFixed(1))
+          }
+        }
+        this.setState({ userData: data });
+      }).catch((err) => {
+        alert(err.message)
+      });
     }
   }
-  
+
   goBack(e) {
     e.preventDefault()
     if (this.props.user === "user") {
-        this.props.history.push('/trophy');
+      this.props.history.push('/trophy');
     }
     else if (this.props.user === "admin") {
-        this.props.history.push('/admin');
+      this.props.history.push('/admin');
     }
   }
 
   goToProfile(e) {
     e.preventDefault();
-    if (this.props.user === "admin" && this.props.match){
+    if (this.props.user === "admin" && this.props.match) {
       this.props.history.push(`/profile/${this.props.match.params.id}`);
     }
   }
-  
+
   render() {
     const data = this.state.userData;
 
@@ -65,24 +74,16 @@ class UserProfile extends Component {
       return (<div>LOADING</div>);
     }
 
-    const data1 = {
+    const hoursData = {
       labels: ["Tic Tac Toe", "Checkers"],
       datasets: [
         {
-          data: [12, 19, 3, 5, 2, 3],
+          data: [data.tictactoeStats.hoursPlayed, data.checkersStats.hoursPlayed],
           backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
             "rgba(153, 102, 255, 0.2)",
             "rgba(255, 159, 64, 0.2)"
           ],
           borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 0)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
             "rgba(153, 102, 255, 1)",
             "rgba(255, 159, 64, 1)"
           ],
@@ -91,7 +92,25 @@ class UserProfile extends Component {
       ]
     };
 
-    const options1 = {
+    const gamesData = {
+      labels: ["Tic Tac Toe", "Checkers"],
+      datasets: [
+        {
+          data: [data.tictactoeStats.gamesPlayed, data.checkersStats.gamesPlayed],
+          backgroundColor: [
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)"
+          ],
+          borderColor: [
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)"
+          ],
+          borderWidth: 1
+        }
+      ]
+    };
+
+    const chartOptions = {
       scales: {
         yAxes: [
           {
@@ -115,28 +134,34 @@ class UserProfile extends Component {
       responsive: true, maintainAspectRatio: false
     };
 
-    const data2 = {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    const lineDataCheckers = {
+      labels: [
+        '4 Games Ago', '3 Games Ago', 
+        '2 Games Ago', '1 Game Ago', 
+        'Current'
+      ],
       datasets: [
         {
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1
+          label: 'Win Percent',
+          data: data.checkersStats.winPercent,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "rgba(75,192,192,1)"
+        }
+      ]
+    };
+
+    const lineDataTicTacToe = {
+      labels: [
+        '4 Games Ago', '3 Games Ago', 
+        '2 Games Ago', '1 Game Ago', 
+        'Current'
+      ],
+      datasets: [
+        {
+          label: 'Win Percent',
+          data: data.tictactoeStats.winPercent,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "rgba(75,192,192,1)"
         }
       ]
     };
@@ -165,60 +190,6 @@ class UserProfile extends Component {
       responsive: true, maintainAspectRatio: false
     };
 
-    const lineDataCheckers = {
-      type: "line",
-      datasets: [
-        {
-          data: data.checkersStats.winPercent,
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1,
-          lineTension: 0
-        },
-      ],
-    };
-
-    const lineDataTicTacToe = {
-      type: "line",
-      datasets: [
-        {
-          data: data.tictactoeStats.winPercent,
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1,
-          lineTension: 0
-        },
-      ],
-    };
-
     return (
       <div id="userProfile">
         <button className="profile-button" id="back-btn" onClick={this.goBack}>
@@ -229,14 +200,14 @@ class UserProfile extends Component {
         </div>
         {this.props.user === "admin" &&
           <button className="profile-button" id="profile-btn" onClick={this.goToProfile}>
-        MODIFY<i className="fas fa-chevron-right" />
-        </button>}
+            MODIFY<i className="fas fa-chevron-right" />
+          </button>}
 
         <h2 className="chartsLabel">OVERALL STATS</h2>
         <div className="row charts">
           <div className="col-sm-4">
-          <div className="chart-container">
-            <Doughnut data={data1} options={options1} />
+            <div className="chart-container">
+              <Doughnut data={hoursData} options={chartOptions} />
             </div>
             <span>
               <span className="stats">
@@ -247,19 +218,17 @@ class UserProfile extends Component {
             </span>
           </div>
           <div className="col-sm-4">
-          <div className="chart-container">
-            <Line data={data2} options={options1} />
-            </div>
-            <span>
+          <span>
               <span className="stats">
-                <span className="green">{data.winstreak}</span> <br />
+                <span className="green"><h1>{data.winstreak}</h1></span>
+                <br />
               </span>
-              Winning Game Streak
+              Game Winning Streak
             </span>
           </div>
           <div className="col-sm-4">
-          <div className="chart-container">
-            <Doughnut data={data1} options={options1} />
+            <div className="chart-container">
+              <Doughnut data={gamesData} options={chartOptions} />
             </div>
             <span>
               <span className="stats">

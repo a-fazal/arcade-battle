@@ -6,35 +6,65 @@ class UserMain extends Component {
     super(props);
     // BACK END DATA
     this.state = {
-      hoursPlayed: 9,
-      streak: 20,
-      gamesPlayed: 10,
-      test: ''
-    };
+      userData: null
+    }
+    
+    this.fetchUserInfo = this.fetchUserInfo.bind(this);
+  }
+  
+  componentDidMount() {
+    this.fetchUserInfo();
+  }
 
+  fetchUserInfo() {
+      // BACKEND CALL
+      fetch(`/currentuser/stats`).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      }).then((json) => {
+        const data = {
+          username: json.username,
+          winstreak: json.winStreak["Overall"],
+          hoursPlayed: (json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000),
+          gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"] + json.gamesPlayed["Checkers"],
+          checkersStats: {
+            hoursPlayed: json.timePlayed["Checkers"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Checkers"],
+            winPercent: json.winPercent["Checkers"].map(elem => (elem * 100).toFixed(1))
+          },
+          tictactoeStats: {
+            hoursPlayed: json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000),
+            gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"],
+            winPercent: json.winPercent["Tic-Tac-Toe"].map(elem => (elem * 100).toFixed(1))
+          }
+        }
+        this.setState({ userData: data });
+      }).catch((err) => {
+        alert(err.message)
+      });
   }
 
 
   render() {
-    // BACK END DATA
-    const data1 = {
+    const data = this.state.userData;
+
+    if (!data) {
+      return (<div>LOADING</div>);
+    }
+    
+    const hoursData = {
       labels: ["Tic Tac Toe", "Checkers"],
       datasets: [
         {
-          data: [12, 19, 3, 5, 2, 3],
+          data: [data.tictactoeStats.hoursPlayed, data.checkersStats.hoursPlayed],
           backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
             "rgba(153, 102, 255, 0.2)",
             "rgba(255, 159, 64, 0.2)"
           ],
           borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 0)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
             "rgba(153, 102, 255, 1)",
             "rgba(255, 159, 64, 1)"
           ],
@@ -43,7 +73,25 @@ class UserMain extends Component {
       ]
     };
 
-    const options1 = {
+    const gamesData = {
+      labels: ["Tic Tac Toe", "Checkers"],
+      datasets: [
+        {
+          data: [data.tictactoeStats.gamesPlayed, data.checkersStats.gamesPlayed],
+          backgroundColor: [
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)"
+          ],
+          borderColor: [
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)"
+          ],
+          borderWidth: 1
+        }
+      ]
+    };
+
+    const chartOptions = {
       scales: {
         yAxes: [
           {
@@ -66,33 +114,7 @@ class UserMain extends Component {
       },
       responsive: true, maintainAspectRatio: false
     };
-
-    // BACK END DATA
-    const data2 = {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255,99,132,1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1
-        }
-      ]
-    };
+    
     return (
       <div className="row">
         <div className="col-sm-12 text-center">
@@ -106,7 +128,7 @@ class UserMain extends Component {
         <div className="row" id="charts">
           <div className="col-sm-4">
           <div className="chart-container">
-            <Doughnut data={data1} options={options1} />
+              <Doughnut data={hoursData} options={chartOptions} />
             </div>
             <span>
               <span className="stats">
@@ -117,19 +139,16 @@ class UserMain extends Component {
             </span>
           </div>
           <div className="col-sm-4">
-          <div className="chart-container">
-            <Line data={data2} options={options1} />
-            </div>
             <span>
               <span className="stats">
-                <span className="green">{this.state.streak}</span> <br />
+                <span className="green"><h1>{data.winstreak}</h1></span> <br />
               </span>
-              Winning Game Streak
+              Game Winning Streak
             </span>
           </div>
           <div className="col-sm-4">
           <div className="chart-container">
-            <Doughnut data={data1} options={options1} />
+              <Doughnut data={gamesData} options={chartOptions} />
             </div>
             <span>
               <span className="stats">
