@@ -71,7 +71,7 @@ gameOverMessage(turn) {
   render() {
     if (this.state.them) {
       return (
-        <div id=inGame>
+        <div id="inGame">
         	<div class="inGameHeader">
         		<div id="myStats" className="player-stats">
         			<div className="player-identity">

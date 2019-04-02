@@ -53,8 +53,8 @@ class UserProfile extends Component {
 
   goToProfile(e) {
     e.preventDefault();
-    if (this.props.user === "admin"){
-      this.props.history.push('/profile');
+    if (this.props.user === "admin" && this.props.match){
+      this.props.history.push(`/profile/${this.props.match.params.id}`);
     }
   }
   

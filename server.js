@@ -14,10 +14,13 @@ const { User } = require("./models/user");
 const { CurrentGame } = require("./models/currentgame");
 const { CompleteGame } = require("./models/completegame");
 
-const { INIT_USERS } = require('./initData');
+const { INIT_USERS, INIT_GAMES } = require('./initData');
 
 const app = express();
 app.use(bodyParser.json());
+
+// The number of points used for the win percent line graphs
+const WIN_PERCENT_POINTS = 5;
 
 //
 // app.get('/test', (req, res) => {
@@ -28,12 +31,37 @@ app.use(bodyParser.json());
 // Delete all model objects
 // add test data to the database
 app.post('/resetdata', (req, res) => {
+  let ret = {
+    games: [],
+    users: []
+  }
+  let set = false;
   CurrentGame.deleteMany()
+  CompleteGame.deleteMany()
+    .then(function () {
+      CompleteGame.create(INIT_GAMES)
+        .then(games => {
+          ret.games = games
+          if (set) {
+            res.send(ret);
+          } else {
+            set = true;
+          }
+        })
+        .catch(error => {
+          res.status(500).send();
+        })
+    })
   User.deleteMany()
     .then(function () {
       User.create(INIT_USERS)
         .then(users => {
-          res.send(users);
+          ret.users = users
+          if (set) {
+            res.send(ret);
+          } else {
+            set = true;
+          }
         })
         .catch(error => {
           res.status(500).send();
@@ -127,6 +155,73 @@ app.patch("/user/:id/reinstate", (req, res) => {
       { new: true })
       .then(function (user) {
         res.send(user);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      })
+  }
+})
+
+app.get("/user/:id/stats", (req, res) => {
+  const id = req.params.id
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send()
+  } else {
+    // Needed:
+    // hours played (itemized by game)
+    // games played (itemized by game)
+    // current win streak
+    User.findById(id)
+      .then(function (user) {
+        CompleteGame.find()
+          .or([{ playerOne: user.username }, { playerTwo: user.username }])
+          .sort({ endTime: 'ascending' })
+          .exec((err, games) => {
+            if (err) {
+              return res.status(500).send(err);
+            }
+            let timePlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let gamesPlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let winStreak = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let winPercent = {
+              "Tic-Tac-Toe": [],
+              "Checkers": []
+            }
+
+            // used to calculate historic win percentages
+            let winCount = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+
+            let i = 0
+            while (i < games.length) {
+              if (games[i].winner === user.username) {
+                winStreak[games[i].game] += 1
+                winCount[games[i].game] += 1
+              } else {
+                winStreak[games[i].game] = 0
+              }
+              gamesPlayed[games[i].game] += 1
+              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
+              i++;
+            }
+
+            winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
+            winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
+
+            res.send({ timePlayed, gamesPlayed, winStreak, winPercent })
+          })
       })
       .catch(err => {
         res.status(500).send(err);

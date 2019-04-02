@@ -138,7 +138,7 @@ class Admin extends Component {
             PENDING USER REGISTRATIONS
         </div>
           {this.state.pending.map(user =>
-            <div className="pending-user">
+            <div className="pending-user" key={user._id}>
               <span className="user-name">
                 {user.username}
               </span>
@@ -151,7 +151,7 @@ class Admin extends Component {
             ACTIVE USERS
           </div>
           {this.state.active.map(user =>
-            <Link to={"/user/" + user._id}>
+            <Link to={"/user/" + user._id} key={user._id}>
               <div className="active-user">
                 <div className="user-description">
                   <div className="text-center">{user.username}</div>

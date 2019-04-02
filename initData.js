@@ -2,6 +2,7 @@
 
 const { User } = require("./models/user");
 const { CurrentGame } = require("./models/currentgame");
+const { CompleteGame } = require("./models/completegame");
 
 const INIT_USERS = [
     new User({
@@ -50,4 +51,89 @@ const INIT_USERS = [
     })
 ]
 
-module.exports = { INIT_USERS }
+const INIT_GAMES = [
+    new CompleteGame({
+        startTime: "2016-01-24T18:21:55.000+00:00",
+        endTime: "2016-01-24T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user",
+        game: "Tic-Tac-Toe"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-25T18:21:55.000+00:00",
+        endTime: "2016-01-25T21:21:55.000+00:00",
+        playerOne: "user2",
+        playerTwo: "user",
+        winner: "user",
+        game: "Tic-Tac-Toe"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-26T18:21:55.000+00:00",
+        endTime: "2016-01-26T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user",
+        game: "Tic-Tac-Toe"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-27T18:21:55.000+00:00",
+        endTime: "2016-01-27T21:21:55.000+00:00",
+        playerOne: "user2",
+        playerTwo: "user",
+        winner: "user2",
+        game: "Tic-Tac-Toe"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-28T18:21:55.000+00:00",
+        endTime: "2016-01-28T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user",
+        game: "Tic-Tac-Toe"
+    }),
+
+
+    new CompleteGame({
+        startTime: "2016-01-24T18:21:55.000+00:00",
+        endTime: "2016-01-24T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user2",
+        game: "Checkers"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-25T18:21:55.000+00:00",
+        endTime: "2016-01-25T21:21:55.000+00:00",
+        playerOne: "user2",
+        playerTwo: "user",
+        winner: "user",
+        game: "Checkers"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-26T18:21:55.000+00:00",
+        endTime: "2016-01-26T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user2",
+        game: "Checkers"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-27T18:21:55.000+00:00",
+        endTime: "2016-01-27T21:21:55.000+00:00",
+        playerOne: "user2",
+        playerTwo: "user",
+        winner: "user",
+        game: "Checkers"
+    }),
+    new CompleteGame({
+        startTime: "2016-01-28T18:21:55.000+00:00",
+        endTime: "2016-01-28T21:21:55.000+00:00",
+        playerOne: "user",
+        playerTwo: "user2",
+        winner: "user2",
+        game: "Checkers"
+    })
+]
+
+module.exports = { INIT_USERS, INIT_GAMES }

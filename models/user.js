@@ -33,12 +33,12 @@ const UserSchema = new mongoose.Schema({
 		type: Boolean,
 		required: true,
 	},
-}, { collection : 'User' });
+}, { collection: 'User' });
 
-UserSchema.statics.findByNamePassword = function(name, password) {
+UserSchema.statics.findByNamePassword = function (name, password) {
 	const User = this;
 
-	return User.findOne({username: name, password: password}).then((user) => {
+	return User.findOne({ username: name, password: password }).then((user) => {
 		if (!user) {
 			return Promise.reject();
 		}

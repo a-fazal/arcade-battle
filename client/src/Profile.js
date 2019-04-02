@@ -92,7 +92,7 @@ class Profile extends Component {
       		</div>
 
       		<div className="col-5 profile-changes">
-      			<span class="profile-changes-header">Change password</span>
+      			<span className="profile-changes-header">Change password</span>
       			<form>
       			Old password<br/>
       			<input type="text" className="form-control" id="oldPass" placeholder="Enter old password"/>
