@@ -1,3 +1,5 @@
+'use strict';
+
 const INIT_USERS = [
     new User({
         username: "user",
@@ -45,4 +47,4 @@ const INIT_USERS = [
     })
 ]
 
-export { INIT_USERS }
+module.exports = { INIT_USERS }
