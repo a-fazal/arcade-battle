@@ -1,7 +1,5 @@
 "use strict";
 
-import { INIT_USERS } from './initData'
-
 const log = console.log;
 
 const express = require("express");
@@ -14,6 +12,8 @@ const { mongoose } = require("./db/mongoose");
 
 const { User } = require("./models/user");
 const { CurrentGame } = require("./models/currentgame");
+
+const { INIT_USERS } = require('./initData');
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,6 +32,7 @@ app.post('/resetdata', (req, res) => {
       INIT_USERS.forEach((u) => {u.save()})
     })
   CurrentGame.deleteMany()
+  res.status(200).send();
 })
 
 /*  USER ENDPOINTS  */
