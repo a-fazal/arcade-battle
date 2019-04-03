@@ -6,6 +6,7 @@ const express = require("express");
 const path = require("path");
 const port = process.env.PORT || 5000;
 const bodyParser = require("body-parser"); // middleware for parsing HTTP body
+const session = require('express-session');
 const { ObjectID } = require("mongodb");
 
 const { mongoose } = require("./db/mongoose");
@@ -27,6 +28,26 @@ const WIN_PERCENT_POINTS = 5;
 //   res.send({ testMessage: 'testing' });
 // });
 
+/* Session cookie */
+// Add express sesssion middleware
+app.use(session({
+  secret: 'oursecret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000,
+    httpOnly: true
+  }
+}))
+
+// Add middleware to check for logged-in users
+const sessionChecker = (req, res, next) => {
+  if (req.session.user) {
+    res.redirect('/home')
+  } else {
+    next();
+  }
+}
 
 // Delete all model objects
 // add test data to the database
@@ -48,8 +69,8 @@ app.post('/resetdata', (req, res) => {
             set = true;
           }
         })
-        .catch(error => {
-          res.status(500).send();
+        .catch((err) => {
+          res.status(500).send(err);
         })
     })
   User.deleteMany()
@@ -63,8 +84,8 @@ app.post('/resetdata', (req, res) => {
             set = true;
           }
         })
-        .catch(error => {
-          res.status(500).send();
+        .catch((err) => {
+          res.status(500).send(err);
         })
     })
 })
@@ -87,7 +108,6 @@ app.get("/user/:id", (req, res) => {
 
 app.get("/allusers", (req, res) => {
   User.find({})
-    .select({ password: 0 })
     .then(function (users) {
       if (!users) {
         res.status(404).send();
@@ -95,7 +115,7 @@ app.get("/allusers", (req, res) => {
         res.send(users);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send(err);
     });
 });
@@ -144,7 +164,7 @@ app.patch("/user/:id/accept", (req, res) => {
       .then(function (user) {
         res.send(user);
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
   }
@@ -166,7 +186,7 @@ app.patch("/user/:id/deny", (req, res) => {
           res.status(500).send({ "msg": "Cannot delete users once they have been accepted" })
         }
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
   }
@@ -184,7 +204,7 @@ app.patch("/user/:id/ban", (req, res) => {
       .then(function (user) {
         res.send(user);
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
   }
@@ -202,7 +222,7 @@ app.patch("/user/:id/reinstate", (req, res) => {
       .then(function (user) {
         res.send(user);
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
   }
@@ -272,7 +292,7 @@ app.get("/user/:id/stats", (req, res) => {
             res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
   }
@@ -341,7 +361,7 @@ app.get("/currentuser/stats", (req, res) => {
             res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send(err);
       })
 })
@@ -359,8 +379,8 @@ app.get("/getopponent/:game", (req, res) => {
         res.send(currentgame);
       }
     })
-    .catch(error => {
-      res.status(500).send();
+    .catch((error) => {
+      res.status(500).send(error);
     });
 });
 
@@ -378,8 +398,7 @@ app.post('/currentgame', (req, res) => {
 
   currentgame.save().then((currentgame) => {
     res.send(currentgame)
-  }, (error) => {
-
+  }).catch((error) => {
     res.status(400).send(error)
   })
 })
@@ -415,7 +434,7 @@ app.get('/currentgamemoves/:id', (req, res) => {
       res.send(currentgame.moves);
     }
   }).catch((error) => {
-    res.status(500).send()
+    res.status(500).send(error)
   })
 })
 
@@ -432,13 +451,12 @@ app.patch('/currentgamemoves/:id', (req, res) => {
       moves.set(req.body);
       currentgame.save().then((currentgame) => {
         res.send(currentgame)
-      }, (error) => {
+      }).catch((error) => {
         res.status(400).send(error)
       })
-
     }
   }).catch((error) => {
-    res.status(500).send()
+    res.status(500).send(error)
   })
 })
 
