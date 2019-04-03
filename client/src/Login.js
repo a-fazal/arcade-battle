@@ -17,14 +17,58 @@ class Login extends Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.setLogin = this.setLogin.bind(this);
+    this.fetchInfo = this.fetchInfo.bind(this);
     this.state.registeredUsers.push(new User("user", "user"));
     this.state.registeredUsers.push(new User("user2", "user2"));
     this.state.registeredAdmins.push(new User("admin", "admin"));
   }
 
+  componentDidMount(){
+    this.fetchInfo();
+  }
+
+  fetchInfo() {
+    // Get registered users
+    fetch('/allusers').then((response) => {
+      if (response.status !== 200) {
+        throw new Error(response.statusText);
+      } else {
+        return response.json();
+      }
+    }).then((json) => {
+      this.setState({registeredUsers: json})
+    }).catch((error) => {
+      alert(error.message);
+    })
+
+    // Get all admins
+    fetch('/alladmins').then((response) => {
+      if (response.status !== 200) {
+        throw new Error(response.statusText);
+      } else {
+        return response.json();
+      }
+    }).then((json) => {
+      this.setState({registeredAdmins: json})
+    }).catch((error) => {
+      alert(error.message);
+    })
+  }
+
   handleClick(e) {
     e.preventDefault();
     if (this.state.login) {
+      /*
+      fetch('/user/login').then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      }).catch((err) => {
+        alert("Invalid username or password.")
+      })
+      */
       const user = document.querySelector("#userInput").value;
       const password = document.querySelector("#passwordInput").value;
       let authenticated = false;
@@ -105,6 +149,7 @@ class Login extends Component {
                   className="form-control"
                   id="userInput"
                   placeholder="Enter username"
+                  name="username"
                 />
               </div>
               <div className="form-group">
@@ -114,6 +159,7 @@ class Login extends Component {
                   className="form-control"
                   id="passwordInput"
                   placeholder="Enter password"
+                  name="password"
                 />
               </div>
               {!this.state.login ? (

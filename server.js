@@ -91,6 +91,9 @@ app.post('/resetdata', (req, res) => {
 })
 
 /*  USER ENDPOINTS  */
+app.get("/user/login", (req, res) => {
+  //console.log(req.body.username);
+})
 
 app.get("/user/:id", (req, res) => {
   const id = req.params.id;
@@ -107,8 +110,11 @@ app.get("/user/:id", (req, res) => {
 })
 
 app.get("/allusers", (req, res) => {
-  User.find({})
-    .then(function (users) {
+  User.find({
+    isBanned: false, 
+    isPending: false,
+    role: "user"
+  }).then(function (users) {
       if (!users) {
         res.status(404).send();
       } else {
@@ -119,6 +125,22 @@ app.get("/allusers", (req, res) => {
       res.status(500).send(err);
     });
 });
+
+app.get("/alladmins", (req, res) => {
+  User.find({
+    role: "admin",
+    isBanned: false,
+    isPending: false
+  }).then((users) => {
+    if (!users) {
+      res.status(404).send();
+    } else {
+      res.send(users);
+    }
+  }).catch((error) => {
+    res.status(500).send(error);
+  })
+})
 
 app.patch("/user/:id/updatepass", (req, res) => {
   const id = req.params.id;
