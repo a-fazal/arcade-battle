@@ -91,10 +91,6 @@ app.post('/resetdata', (req, res) => {
 })
 
 /*  USER ENDPOINTS  */
-app.get("/user/login", (req, res) => {
-  //console.log(req.body.username);
-})
-
 app.get("/user/:id", (req, res) => {
   const id = req.params.id;
   if (!ObjectID.isValid(id)) {
