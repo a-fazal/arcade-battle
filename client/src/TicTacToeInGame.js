@@ -251,6 +251,12 @@ class TicTacToeInGame extends Component {
         if (res.status === 200) {
            return res.json();
        } else {
+        if (this.state.turn === "o") {
+          this.setState({ turn: "x" });
+        } else {
+          this.setState({ turn: "o" });
+        }
+         this.checkForEndGame(this.state.turn);
          this.setState({ end: true });
        }
     })

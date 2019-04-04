@@ -385,7 +385,6 @@ app.get("/currentuser/stats", (req, res) => {
                 winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
-              console.log(new Date(games[i].endTime).getTime())
               timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
               winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
               i++;
