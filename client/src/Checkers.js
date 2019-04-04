@@ -107,7 +107,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.hoursPlayed}</h1></span>
+                <span className="green"><h1>{data.checkersStats.hoursPlayed}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -127,7 +127,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.gamesPlayed}</h1></span> <br />
+                <span className="green"><h1>{data.checkersStats.gamesPlayed}</h1></span> <br />
               </span>
               Games Played
             </span>

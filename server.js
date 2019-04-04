@@ -392,7 +392,6 @@ app.get("/currentuser/stats", (req, res) => {
 
             winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
             winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
-            console.log({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
             res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
