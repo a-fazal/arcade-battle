@@ -32,23 +32,36 @@ class TicTacToeInGame extends Component {
     this.checkForGameStateChange = this.checkForGameStateChange.bind(this);
     this.moveCurrenttoComplete = this.moveCurrenttoComplete.bind(this);
     this.componentCleanup = this.componentCleanup.bind(this);
+    this.forfeitMatch = this.forfeitMatch.bind(this);
   }
 
   componentDidMount() {
     this.props.setGameHeader(true);
     this.checkForOpponent();
-  }
-
-  componentCleanup() {
-    console.log('cleannn')
-    this.setState({ end: true });
+    window.addEventListener('beforeunload', this.forfeitMatch);
+    window.addEventListener('beforeunload', this.componentCleanup);
   }
 
   componentWillUnmount() {
     this.props.setGameHeader(false);
-    this.componentCleanup();
+    window.removeEventListener('beforeunload', this.forfeitMatch);
     window.removeEventListener('beforeunload', this.componentCleanup);
   }
+
+  forfeitMatch(e){
+    if (this.state.them.username === this.props.user && !this.state.end) {
+      let winner = this.state.me.username;
+      this.moveCurrenttoCompleteNoDelay(winner);
+    } else if (this.state.me.username === this.props.user && !this.state.end) {
+      let winner = this.state.them.username;
+      this.moveCurrenttoCompleteNoDelay(winner);
+    }
+  } 
+
+  componentCleanup() {
+    this.setState({ end: true });
+  }
+
 
   checkForOpponent() {
     // Poll the server for an opponent
@@ -198,7 +211,6 @@ class TicTacToeInGame extends Component {
     const url = "/completegame";
     // The data we are going to send in our request
     let data = {
-      _id: + this.state._id,
       startTime: this.state.startTime,
       playerOne: this.state.me.username,
       playerTwo: this.state.them.username,
@@ -244,6 +256,56 @@ class TicTacToeInGame extends Component {
       }, 1100);
   }
 
+  moveCurrenttoCompleteNoDelay(winner) {
+    const url_delete = "/currentgame/" + this.state._id;
+
+    const request_delete = new Request(url_delete, {
+      method: "delete",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+
+    fetch(request_delete)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      
+    const url = "/completegame";
+    // The data we are going to send in our request
+    let data = {
+      startTime: this.state.startTime,
+      playerOne: this.state.me.username,
+      playerTwo: this.state.them.username,
+      winner: winner,
+      game: "Tic-Tac-Toe"
+    };
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+    fetch(request)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+
+  }
+
   checkForGameStateChange() {
     const url = '/currentgamemoves/' + this.state._id;
     fetch(url)
@@ -256,7 +318,11 @@ class TicTacToeInGame extends Component {
         } else {
           this.setState({ turn: "o" });
         }
-         this.checkForEndGame(this.state.turn);
+         let check = this.checkForEndGame(this.state.turn);
+         if (check == 'gameforfeit') {
+           alert('Other player has forfeited the match, you win!');
+         }
+         
          this.setState({ end: true });
        }
     })
@@ -454,7 +520,7 @@ class TicTacToeInGame extends Component {
     for (i = 0; i < 9; i++) {
       if (this.state[spots[i]] === "empty") {
         this.setState({ end: false });
-        return;
+        return 'gameforfeit';
       }
     }
     alert("Game over, it's a tie!");

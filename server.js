@@ -499,11 +499,10 @@ app.post('/completegame', (req, res) => {
 app.delete('/currentgame/:id', (req, res) => {
 	// Add code here
 	const id = req.params.id
-
+  console.log(id)
 	if (!ObjectID.isValid(id)) {
 		res.status(404).send()
 	}
-
   CurrentGame.findByIdAndRemove(id, function(error) {
       if (error) {
           res.status(400).send(error);
