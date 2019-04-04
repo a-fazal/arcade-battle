@@ -275,9 +275,10 @@ class TicTacToeInGame extends Component {
             }
           // }
         }
-
         if (!this.state.end) {
-          setTimeout(this.checkForGameStateChange, 1000);
+          let timer;
+          clearTimeout(timer);
+          timer = setTimeout(this.checkForGameStateChange, 1000);
         }
 
     }).catch((error) => {
