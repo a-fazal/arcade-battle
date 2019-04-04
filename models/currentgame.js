@@ -37,7 +37,8 @@ const MovesSchema = new mongoose.Schema({
 // making a model a little differently
 const CurrentGameSchema = new mongoose.Schema({
 	startTime: {
-		type: String,
+    type: Date,
+    default: Date.now
 	},
 	playerOne: {
 		type: String,
@@ -49,7 +50,8 @@ const CurrentGameSchema = new mongoose.Schema({
 		type: String,
 	},
 	startOfLastTurn: {
-    type: String,
+    type: Date,
+    default: Date.now
 	},
   game: {
     type: String,

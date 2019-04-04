@@ -427,7 +427,7 @@ app.get("/getopponent/:game", (req, res) => {
 
 app.post('/currentgame', (req, res) => {
   const currentgame = new CurrentGame({
-    "startTime": new Date(),
+    "startTime": Date.now(),
     "playerOne": req.body.playerOne,
     "playerTwo": "",
     "turn": "x",
@@ -447,8 +447,8 @@ app.post('/currentgame', (req, res) => {
 app.post('/completegame', (req, res) => {
   const completegame = new CompleteGame({
     "_id": req.body._id,
-    "startTime": "",
-    "endTime": new Date(),
+    "startTime": req.body.startTime,
+    "endTime": new Date().toISOString(),
     "playerOne": req.body.playerOne,
     "playerTwo": req.body.playerTwo,
     "winner": req.body.winner,

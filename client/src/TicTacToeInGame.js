@@ -22,7 +22,8 @@ class TicTacToeInGame extends Component {
       me: null,
       them: null,
       _id: null,
-      end: false
+      end: false,
+      startTime: null
     };
     this.checkForOpponent = this.checkForOpponent.bind(this);
     this.checkForEndGame = this.checkForEndGame.bind(this);
@@ -127,7 +128,7 @@ class TicTacToeInGame extends Component {
               symbol: "o"
             }
           };
-          this.setState({ me: data.me, them: data.them, _id: json._id });
+          this.setState({ me: data.me, them: data.them, _id: json._id,  startTime: new Date()});
           this.checkForGameStateChange();
         } else if (json.playerOne !== "" && json.playerTwo !== "") {
           data = {
@@ -147,7 +148,7 @@ class TicTacToeInGame extends Component {
 
           const url = "/currentgame/" + json._id;
           let dataSend = {
-            startOfLastTurn: new Date()
+            startOfLastTurn: Date.now(),
           };
           const request = new Request(url, {
             method: "PATCH",
@@ -166,7 +167,7 @@ class TicTacToeInGame extends Component {
               console.log(error);
           });
 
-          this.setState({ me: data.me, them: data.them, _id: json._id });
+          this.setState({ me: data.me, them: data.them, _id: json._id, startTime: new Date() });
           this.checkForGameStateChange();
         } else {
           if (!this.state.end) {
@@ -190,6 +191,7 @@ class TicTacToeInGame extends Component {
     // The data we are going to send in our request
     let data = {
       _id: + this.state._id,
+      startTime: this.state.startTime,
       playerOne: this.state.me.username,
       playerTwo: this.state.them.username,
       winner: winner,
