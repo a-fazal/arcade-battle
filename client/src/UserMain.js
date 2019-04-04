@@ -8,10 +8,10 @@ class UserMain extends Component {
     this.state = {
       userData: null
     }
-    
+
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
   }
-  
+
   componentDidMount() {
     this.fetchUserInfo();
   }
@@ -28,15 +28,15 @@ class UserMain extends Component {
         const data = {
           username: json.username,
           winstreak: json.winStreak["Overall"],
-          hoursPlayed: (json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000),
+          hoursPlayed: Math.round((json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000)),
           gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"] + json.gamesPlayed["Checkers"],
           checkersStats: {
-            hoursPlayed: json.timePlayed["Checkers"] / (60 * 60 * 1000),
+            hoursPlayed: Math.round(json.timePlayed["Checkers"] / (60 * 60 * 1000)),
             gamesPlayed: json.gamesPlayed["Checkers"],
             winPercent: json.winPercent["Checkers"].map(elem => (elem * 100).toFixed(1))
           },
           tictactoeStats: {
-            hoursPlayed: json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000),
+            hoursPlayed: Math.round(json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000)),
             gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"],
             winPercent: json.winPercent["Tic-Tac-Toe"].map(elem => (elem * 100).toFixed(1))
           }
@@ -54,7 +54,7 @@ class UserMain extends Component {
     if (!data) {
       return (<div>LOADING</div>);
     }
-    
+
     const hoursData = {
       labels: ["Tic Tac Toe", "Checkers"],
       datasets: [
@@ -114,7 +114,7 @@ class UserMain extends Component {
       },
       responsive: true, maintainAspectRatio: false
     };
-    
+
     return (
       <div className="row">
         <div className="col-sm-12 text-center">

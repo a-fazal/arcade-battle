@@ -9,6 +9,7 @@ const port = process.env.PORT || 5000;
 const bodyParser = require("body-parser"); // middleware for parsing HTTP body
 const session = require('express-session');
 const { ObjectID } = require("mongodb");
+const moment = require('moment');
 
 const { mongoose } = require("./db/mongoose");
 
@@ -300,7 +301,7 @@ app.get("/user/:id/stats", (req, res) => {
                 winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
-              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
               winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
               i++;
             }
@@ -369,14 +370,15 @@ app.get("/currentuser/stats", (req, res) => {
                 winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
-              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              console.log(new Date(games[i].endTime).getTime())
+              timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
               winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
               i++;
             }
 
             winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
             winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
-
+            console.log({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
             res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
@@ -447,14 +449,15 @@ app.post('/currentgame', (req, res) => {
 app.post('/completegame', (req, res) => {
   const completegame = new CompleteGame({
     "_id": req.body._id,
-    "startTime": req.body.startTime,
-    "endTime": new Date().toISOString(),
+    "startTime":  moment(req.body.startTime).format('YYYY-MM-DDTHH:mm:ss'),
+    "endTime":  moment().format('YYYY-MM-DDTHH:mm:ss'),
     "playerOne": req.body.playerOne,
     "playerTwo": req.body.playerTwo,
     "winner": req.body.winner,
     "game": req.body.game
   })
   completegame.save().then((completegame) => {
+    console.log(completegame)
     res.send(completegame)
   }).catch((error) => {
     res.status(400).send(error)
