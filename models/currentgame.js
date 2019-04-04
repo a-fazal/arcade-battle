@@ -46,6 +46,12 @@ const CurrentGameSchema = new mongoose.Schema({
 	playerTwo: {
 		type: String,
 	},
+  playerOneImage: {
+    type: String,
+  },
+  playerTwoImage: {
+    type: String,
+  },
 	turn: {
 		type: String,
 	},

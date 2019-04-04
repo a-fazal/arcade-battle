@@ -107,6 +107,21 @@ app.get("/user/:id", (req, res) => {
   }
 })
 
+
+app.get("/user/:username", (req, res) => {
+  const id = req.params.username;
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+  } else {
+    User.findOne({username: username})
+      .then((user) => {
+        res.send(user);
+      }).catch((err) => {
+        res.status(500).send(err);
+      })
+  }
+})
+
 app.get("/allusers", (req, res) => {
   User.find({
     isBanned: false,
@@ -431,7 +446,9 @@ app.post('/currentgame', (req, res) => {
   const currentgame = new CurrentGame({
     "startTime": Date.now(),
     "playerOne": req.body.playerOne,
+    "playerOneImage": req.body.playerOneImage,
     "playerTwo": "",
+    "playerTwoImage": "",
     "turn": "x",
     "startOfLastTurn": "",
     "game": req.body.game,

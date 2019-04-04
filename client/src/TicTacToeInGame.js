@@ -67,8 +67,10 @@ class TicTacToeInGame extends Component {
           // The data we are going to send in our request
           let data = {
             playerOne: this.props.user,
+            playerOneImage: document.querySelector(".avatar-header").src,
             game: "tictactoe"
           };
+
           // Create our request constructor with all the parameters we need
           const request = new Request(url, {
             method: "post",
@@ -95,7 +97,8 @@ class TicTacToeInGame extends Component {
         if (json.playerOne !== this.props.user && json.playerTwo === "") {
           const url = "/currentgame/" + json._id;
           let dataSend = {
-            playerTwo: this.props.user
+            playerTwo: this.props.user,
+            playerTwoImage: document.querySelector(".avatar-header").src
           };
           const request = new Request(url, {
             method: "PATCH",
@@ -117,29 +120,34 @@ class TicTacToeInGame extends Component {
           data = {
             me: {
               username: retrieved.playerOne,
+              image: retrieved.playerOneImage,
               winstreak: 21,
               id: 6,
               symbol: "x"
             },
             them: {
               username: dataSend.playerTwo,
+              image: dataSend.playerTwoImage,
               winstreak: 14,
               id: 14,
               symbol: "o"
             }
           };
+
           this.setState({ me: data.me, them: data.them, _id: json._id,  startTime: new Date()});
           this.checkForGameStateChange();
         } else if (json.playerOne !== "" && json.playerTwo !== "") {
           data = {
             me: {
               username: retrieved.playerOne,
+              image: retrieved.playerOneImage,
               winstreak: 21,
               id: 6,
               symbol: "x"
             },
             them: {
               username: retrieved.playerTwo,
+              image: retrieved.playerTwoImage,
               winstreak: 14,
               id: 14,
               symbol: "o"
@@ -450,7 +458,17 @@ class TicTacToeInGame extends Component {
   }
 
   render() {
+
+
     if (this.state.them) {
+      const  playerOneImageUrl  = {
+        backgroundImage: 'url(' + this.state.me.image + ')'
+    }
+
+    const  playerTwoImageUrl  = {
+      backgroundImage: 'url(' + this.state.them.image + ')'
+    }
+
       return (
         <div id="inGame">
           <div id="inGameHeader">
@@ -459,7 +477,7 @@ class TicTacToeInGame extends Component {
                 <div className="player-name text-center">
                   {this.state.me.username}
                 </div>
-                <div className="player-avatar" />
+                <div className="player-avatar" style={playerOneImageUrl} />
               </div>
             </div>
 
@@ -475,7 +493,7 @@ class TicTacToeInGame extends Component {
                 <div className="player-name text-center">
                   {this.state.them.username}
                 </div>
-                <div className="player-avatar" />
+                <div className="player-avatar" style={playerTwoImageUrl} />
               </div>
             </div>
           </div>
