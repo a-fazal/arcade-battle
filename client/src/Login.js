@@ -20,6 +20,8 @@ class Login extends Component {
     this.fetchInfo = this.fetchInfo.bind(this);
     this.state.registeredUsers.push(new User("user", "user"));
     this.state.registeredUsers.push(new User("user2", "user2"));
+    this.state.registeredUsers.push(new User("user3", "user4"));
+    this.state.registeredUsers.push(new User("user4", "user4"));
     this.state.registeredAdmins.push(new User("admin", "admin"));
   }
 
@@ -75,7 +77,7 @@ class Login extends Component {
       // Server call to backend for user/admin authentication
       for (let i = 0; i < this.state.registeredUsers.length; i++) {
         if (
-          user === this.state.registeredUsers[i].user &&
+          user === this.state.registeredUsers[i].username &&
           password === this.state.registeredUsers[i].password
         ) {
           this.setState({ user: user });
@@ -87,7 +89,7 @@ class Login extends Component {
       for (let i = 0; i < this.state.registeredAdmins.length; i++) {
         // Server call to backend for user/admin authentication
         if (
-          user === this.state.registeredAdmins[i].user &&
+          user === this.state.registeredAdmins[i].username &&
           password === this.state.registeredAdmins[i].password
         ) {
           this.setState({ user: user });

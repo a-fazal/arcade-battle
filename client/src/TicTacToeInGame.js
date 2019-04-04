@@ -9,7 +9,7 @@ class TicTacToeInGame extends Component {
     super(props);
     this.onItemClick = this.onItemClick.bind(this);
     this.state = {
-      turn: "o",
+      turn: "x",
       "top-left-ttt": "empty",
       "top-center-ttt": "empty",
       "top-right-ttt": "empty",
@@ -29,6 +29,8 @@ class TicTacToeInGame extends Component {
     this.checkForWin = this.checkForWin.bind(this);
     this.gameOverMessage = this.gameOverMessage.bind(this);
     this.checkForGameStateChange = this.checkForGameStateChange.bind(this);
+    this.moveCurrenttoComplete = this.moveCurrenttoComplete.bind(this);
+    this.componentCleanup = this.componentCleanup.bind(this);
   }
 
   componentDidMount() {
@@ -36,8 +38,15 @@ class TicTacToeInGame extends Component {
     this.checkForOpponent();
   }
 
+  componentCleanup() {
+    console.log('cleannn')
+    this.setState({ end: true });
+  }
+
   componentWillUnmount() {
     this.props.setGameHeader(false);
+    this.componentCleanup();
+    window.removeEventListener('beforeunload', this.componentCleanup);
   }
 
   checkForOpponent() {
@@ -135,18 +144,94 @@ class TicTacToeInGame extends Component {
               symbol: "o"
             }
           };
+
+          const url = "/currentgame/" + json._id;
+          let dataSend = {
+            startOfLastTurn: new Date()
+          };
+          const request = new Request(url, {
+            method: "PATCH",
+            body: JSON.stringify(dataSend),
+            headers: {
+              Accept: "application/json, text/plain, */*",
+              "Content-Type": "application/json"
+            }
+          });
+
+          fetch(request)
+            .then(function(res) {
+
+          })
+          .catch(error => {
+              console.log(error);
+          });
+
           this.setState({ me: data.me, them: data.them, _id: json._id });
           this.checkForGameStateChange();
         } else {
-          setTimeout(this.checkForOpponent, 1000);
+          if (!this.state.end) {
+            setTimeout(this.checkForOpponent, 1000);
+
+          }
         }
       } else {
+        if (!this.state.end) {
           setTimeout(this.checkForOpponent, 1000);
+        }
       }
       })
       .catch(error => {
         console.log(error);
       });
+  }
+
+  moveCurrenttoComplete(winner) {
+    const url = "/completegame";
+    // The data we are going to send in our request
+    let data = {
+      _id: + this.state._id,
+      playerOne: this.state.me.username,
+      playerTwo: this.state.them.username,
+      winner: winner,
+      game: "Tic-Tac-Toe"
+    };
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+    fetch(request)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      const url_delete = "/currentgame/" + this.state._id;
+
+      const request_delete = new Request(url_delete, {
+        method: "delete",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        }
+      });
+
+      setTimeout(function () {
+      fetch(request_delete)
+        .then(function(res) {
+
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }, 1100);
   }
 
   checkForGameStateChange() {
@@ -156,7 +241,7 @@ class TicTacToeInGame extends Component {
         if (res.status === 200) {
            return res.json();
        } else {
-            alert('Error')
+         this.setState({ end: true });
        }
     })
     .then((json) => {
@@ -164,20 +249,25 @@ class TicTacToeInGame extends Component {
         || this.state["top-right-ttt"] !== json['top-right-ttt'] || this.state["middle-left-ttt"] !== json['middle-left-ttt'] || this.state["middle-center-ttt"] !== json['middle-center-ttt']
         || this.state["middle-right-ttt"] !== json['middle-right-ttt'] || this.state["bottom-left-ttt"] !== json['bottom-left-ttt'] || this.state["bottom-center-ttt"] !== json['bottom-center-ttt']
         || this.state["bottom-right-ttt"] !== json['bottom-right-ttt']) {
-          delete json['_id'];
-          this.setState(json);
-          if (this.state.turn === "o") {
-            this.setState({ turn: "x" });
-          } else {
-            this.setState({ turn: "o" });
-          }
+          // if ((this.state.turn === "o" && this.state.them.username !== this.props.user) || (this.state.turn === "x" && this.state.me.username !== this.props.user)) {
+            delete json['_id'];
+            this.setState(json);
+            if (this.state.turn === "o") {
+              this.setState({ turn: "x" });
+            } else {
+              this.setState({ turn: "o" });
+            }
+          // }
+        }
+
+        if (!this.state.end) {
+          setTimeout(this.checkForGameStateChange, 1000);
         }
 
     }).catch((error) => {
         console.log(error)
     })
 
-    setTimeout(this.checkForGameStateChange, 200);
 
   }
 
@@ -185,68 +275,81 @@ class TicTacToeInGame extends Component {
     e.preventDefault();
     if (!this.state.end && this.state[e.currentTarget.id] === "empty") {
       if (this.state.turn === "o") {
+        if (this.state.them.username === this.props.user) {
         const turn = this.state.turn;
+        const event_save = e.currentTarget.id
 
-        const url = "/currentgamemoves/" + this.state._id;
-        const currentPos = e.currentTarget.id
-        let dataSend = {
+          this.setState({ [e.currentTarget.id]: "o" }, () => {
+            const url = "/currentgamemoves/" + this.state._id;
+            const currentPos = event_save
+            let dataSend = {
 
-        };
-        dataSend[currentPos] = "o"
-        const request = new Request(url, {
-          method: "PATCH",
-          body: JSON.stringify(dataSend),
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-          }
-        });
+            };
+            dataSend[currentPos] = "o"
+            const request = new Request(url, {
+              method: "PATCH",
+              body: JSON.stringify(dataSend),
+              headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+              }
+            });
 
-        fetch(request)
-          .then(function(res) {
+            fetch(request)
+              .then(function(res) {
 
-          })
-          .catch(error => {
-            console.log(error);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+            this.checkForEndGame(turn);
           });
 
-        this.setState({ [e.currentTarget.id]: "o" }, () => {
-          this.checkForEndGame(turn);
-        });
+          this.setState({ turn: "x" });
 
-        this.setState({ turn: "x" });
+
       } else {
+        alert('Not your turn yet!');
+      }
+      } else {
+        if (this.state.me.username == this.props.user) {
         const turn = this.state.turn;
+        const event_save = e.currentTarget.id
 
-        const url = "/currentgamemoves/" + this.state._id;
-        const currentPos = e.currentTarget.id
-        let dataSend = {
+          this.setState({ [e.currentTarget.id]: "x" }, () => {
+            const url = "/currentgamemoves/" + this.state._id;
+            const currentPos = event_save
+            let dataSend = {
 
-        };
-        dataSend[currentPos] = "x"
-        const request = new Request(url, {
-          method: "PATCH",
-          body: JSON.stringify(dataSend),
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-          }
-        });
+            };
+            dataSend[currentPos] = "x"
+            const request = new Request(url, {
+              method: "PATCH",
+              body: JSON.stringify(dataSend),
+              headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+              }
+            });
 
-        fetch(request)
-          .then(function(res) {
+            fetch(request)
+              .then(function(res) {
 
-          })
-          .catch(error => {
-            console.log(error);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+            this.checkForEndGame(turn);
           });
 
-        this.setState({ [e.currentTarget.id]: "x" }, () => {
-          this.checkForEndGame(turn);
-        });
+          this.setState({ turn: "o" });
 
-        this.setState({ turn: "o" });
+      } else {
+        alert('Not your turn yet!')
       }
+    }
     }
   }
 
@@ -257,12 +360,17 @@ class TicTacToeInGame extends Component {
       me.winstreak = this.state.me.winstreak + 1;
       console.log(me);
       this.setState({ me: me });
+      this.moveCurrenttoComplete(this.state.me.username);
+
+
     } else if (turn === this.state.them.symbol) {
       alert(this.state.them.username + " wins!");
       const them = this.state.them;
       them.winstreak = this.state.them.winstreak + 1;
       console.log(them);
       this.setState({ them: them });
+      this.moveCurrenttoComplete(this.state.them.username);
+
     }
   }
 
@@ -334,6 +442,9 @@ class TicTacToeInGame extends Component {
     }
     alert("Game over, it's a tie!");
     this.setState({ end: true });
+
+    this.moveCurrenttoComplete("tie");
+
   }
 
   render() {
