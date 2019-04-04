@@ -139,6 +139,21 @@ app.get("/allusers", (req, res) => {
     });
 });
 
+app.get("/allusersforadmin", (req, res) => {
+  User.find({
+    role: "user"
+  }).then(function (users) {
+      if (!users) {
+        res.status(404).send();
+      } else {
+        res.send(users);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
+
 app.get("/alladmins", (req, res) => {
   User.find({
     role: "admin",

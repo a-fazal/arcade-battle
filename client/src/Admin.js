@@ -25,7 +25,7 @@ class Admin extends Component {
   }
 
   fetchUsers() {
-    fetch('/allusers').then((response) => {
+    fetch('/allusersforadmin').then((response) => {
       if (response.status !== 200) {
         throw new Error(response.statusText);
       } else {
