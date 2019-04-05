@@ -6,16 +6,33 @@ class Profile extends Component {
     super(props);
     // BACK END STATES
     this.state = {
-      name: 'user',
-      password: 'user'
+      data: null
     }
     this.changePassword = this.changePassword.bind(this);
     this.changeName = this.changeName.bind(this);
+    this.fetchUserInfo = this.fetchUserInfo.bind(this);
+  }
+
+  componentDidMount(){
+    this.fetchUserInfo();
+  }
+
+  fetchUserInfo(){
+    fetch('/user').then((response) => {
+      if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+      }
+    }).then((json) => {
+      this.setState({username: json.username, password: json.password, uri: json.uri});
+    }).catch((error) => {
+      alert(error.message);
+    })
   }
 
   changePassword(e) {
     e.preventDefault();
-    // MODIFY BACK END
     const oldPass = document.querySelector('#oldPass').value;
     const newPass = document.querySelector('#newPass').value;
     const confirmPass = document.querySelector('#confirmPass').value;
@@ -54,13 +71,16 @@ class Profile extends Component {
   }
 
   render() {
-
+    const data = {username: this.state.username, uri: this.state.uri, password: this.state.username};
+    if (!data) {
+      return (<div>LOADING</div>);
+    }
     return (
       <div className="container">
       <div className="row">
 	      	<div className="col-sm">
 	      		<div className="username-container">
-	      			<span className="green" id="userName"><h2>{this.state.name}</h2></span>
+	      			<span className="green" id="userName"><h2>{data.username}</h2></span>
 	      		</div>
 	      	</div>
       	</div>
@@ -68,9 +88,8 @@ class Profile extends Component {
       	<div className="row">
       		<div className="col-sm">
       			<div className="avatar-container">
-	      			<img className="avatar" src={avatar} />
-	      			<span className="user-bio">Hello I am new! I look forward to playing with everyone!</span>
-	      		</div>
+	      			<img className="avatar" src={data.uri} />	      		
+            </div>
 	      		<button type="button" className="btn btn-primary" id="change-icon">Change avatar</button>
 	      	</div>
 
@@ -82,7 +101,7 @@ class Profile extends Component {
       			<form>
             <br />
       			New username<br/>
-      			<input type="text" className="form-control" id="nameInput" placeholder="Enter username"/>
+      			<input type="text" className="form-control" id="nameInput" placeholder="Enter username" name="newName"/>
       			<br/>
       			</form>
             <button type="button" className="btn btn-primary" id="change-name-btn" onClick={this.changeName}>Submit</button>
@@ -98,7 +117,7 @@ class Profile extends Component {
       			<input type="text" className="form-control" id="oldPass" placeholder="Enter old password"/>
       			<br/>
       			New password<br/>
-      			<input type="text" className="form-control" id="newPass" placeholder="Enter new password"/>
+      			<input type="text" className="form-control" id="newPass" placeholder="Enter new password" name="newPass"/>
       			<br />
             Confirm new password<br />
             <input type="text" className="form-control" id="confirmPass" placeholder="Confirm password"/>

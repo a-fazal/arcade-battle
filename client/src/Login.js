@@ -35,9 +35,6 @@ class Login extends Component {
           "Content-Type": "application/json"
         }
       }).then((user) => {
-        console.log(user)
-        console.log(user.status)
-        console.log(typeof user)
         if (typeof user === 'string') {
           alert(user);
         } else {

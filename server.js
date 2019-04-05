@@ -136,13 +136,14 @@ app.post("/user/login", (req, res) => {
   })
 })
 
-app.get("/user/:id", (req, res) => {
-  const id = req.params.id;
+app.get("/user", (req, res) => {
+  const id = req.session.user;
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
     User.findById(id)
       .then((user) => {
+        console.log(user)
         res.send(user);
       }).catch((err) => {
         res.status(500).send(err);
@@ -393,7 +394,7 @@ app.get("/user/:id/stats", (req, res) => {
 
 app.get("/currentuser/stats", (req, res) => {
     // TODO: get the currently logged in user's id
-    const id = "5ca300727c3d0b6d2bee77ae"
+    const id = req.session.user;
 
     // Needed:
     // hours played (itemized by game)
@@ -461,8 +462,7 @@ app.get("/currentuser/stats", (req, res) => {
 app.get('/currentuser/info', (req, res) => {
 
   // TODO: get the currently logged in user's id
-  const id = "5ca300727c3d0b6d2bee77ae"
-
+  const id = req.session.user;
 
 	if (!ObjectID.isValid(id)) {
 		res.status(404).send()
@@ -473,7 +473,6 @@ app.get('/currentuser/info', (req, res) => {
 			res.status(404).send()
 		} else {
 			res.send(user)
-
 		}
 	}).catch((error) => {
 		res.status(500).send()
