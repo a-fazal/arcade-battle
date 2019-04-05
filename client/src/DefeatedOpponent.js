@@ -12,10 +12,11 @@ class DefeatedOpponent extends Component {
               ? <div className="trophy-crown"></div>
               : <div className="trophy-crown-spacer"></div>
             }
-            <div className="trophy-avatar"></div>
+            <div className="trophy-avatar" style={{ backgroundImage: 'url(' + '/avatars/staravatar.jpg' + ')' }}></div>
           </div>
           <div className="trophy-description">
-            <div className="text-center">{opponent.username}<br />{opponent.lastBeaten}<br />{"Beaten in: " + opponent.beatenIn}</div>
+            <div className="text-center">{opponent.playerOne == this.props.user && opponent.playerTwo} {opponent.playerTwo == this.props.user && opponent.playerOne}
+      <br />{opponent.endTime}<br />{"Beaten in: " + opponent.game}</div>
           </div>
         </Link>
       </div>

@@ -480,6 +480,23 @@ app.get('/currentuser/info', (req, res) => {
 
 })
 
+app.get("/currentuser/winner", (req, res) => {
+  const id = req.session.user;
+
+  User.findById(id)
+    .then(function (user) {
+      CompleteGame.find({ winner: user.username })
+        .sort({ endTime: 'ascending' })
+        .exec((err, games) => {
+          console.log(games)
+          res.send(games)
+        })
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    })
+})
+
 /*  GAMEPLAY ENDPOINTS  */
 
 app.get("/getopponent/:game", (req, res) => {
