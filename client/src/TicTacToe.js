@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Line } from "react-chartjs-2";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, withRouter }from "react-router-dom";
+
 
 
 class TicTacToe extends Component {
@@ -155,4 +156,4 @@ class TicTacToe extends Component {
   }
 }
 
-export default TicTacToe;
+export default withRouter(TicTacToe);

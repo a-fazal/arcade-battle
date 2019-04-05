@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link, Switch, withRouter }from "react-router-dom";
 
-// TODO: remove after phase 1
-// simulated delay to find an opponent.
+
 var delay = 3;
 
 class TicTacToeInGame extends Component {
@@ -36,10 +36,13 @@ class TicTacToeInGame extends Component {
   }
 
   componentDidMount() {
-    this.props.setGameHeader(true);
-    this.checkForOpponent();
-    window.addEventListener('beforeunload', this.forfeitMatch);
-    window.addEventListener('beforeunload', this.componentCleanup);
+      this.props.setGameHeader(true);
+    if (this.props.user !== "") {
+      this.checkForOpponent();
+    }
+      window.addEventListener('beforeunload', this.forfeitMatch);
+      window.addEventListener('beforeunload', this.componentCleanup);
+      
   }
 
   componentWillUnmount() {
@@ -248,7 +251,6 @@ class TicTacToeInGame extends Component {
       setTimeout(function () {
       fetch(request_delete)
         .then(function(res) {
-
         })
         .catch(error => {
           console.log(error);
@@ -275,7 +277,7 @@ class TicTacToeInGame extends Component {
       .catch(error => {
         console.log(error);
       });
-      
+
     const url = "/completegame";
     // The data we are going to send in our request
     let data = {
@@ -664,4 +666,4 @@ class TicTacToeInGame extends Component {
   }
 }
 
-export default TicTacToeInGame;
+export default withRouter(TicTacToeInGame);
