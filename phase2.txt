@@ -48,4 +48,4 @@ Overview of routes:
 -Profile: PATCH endpoints to change username and password
 -In Game: GET, PATCH and POST endpoints, first there is a GET polling loop to find an opponent (otherwise POST endpoint to create a game) then the game itself 
 has PATCH endpoints to update the game board and GET endpoints for more polling loops to wait for opponents turn. Then a DELETE and POST endpoint to move the game in progress to a completed game once the game is over
--Admin: PATCH endpoints to ban, approve and view all users. 
+-Admin: PATCH endpoints to ban, approve and GET endpoint view all users. 
