@@ -9,7 +9,7 @@ class TicTacToeInGame extends Component {
     super(props);
     this.onItemClick = this.onItemClick.bind(this);
     this.state = {
-      turn: "o",
+      turn: "x",
       "top-left-ttt": "empty",
       "top-center-ttt": "empty",
       "top-right-ttt": "empty",
@@ -22,23 +22,46 @@ class TicTacToeInGame extends Component {
       me: null,
       them: null,
       _id: null,
-      end: false
+      end: false,
+      startTime: null
     };
     this.checkForOpponent = this.checkForOpponent.bind(this);
     this.checkForEndGame = this.checkForEndGame.bind(this);
     this.checkForWin = this.checkForWin.bind(this);
     this.gameOverMessage = this.gameOverMessage.bind(this);
     this.checkForGameStateChange = this.checkForGameStateChange.bind(this);
+    this.moveCurrenttoComplete = this.moveCurrenttoComplete.bind(this);
+    this.componentCleanup = this.componentCleanup.bind(this);
+    this.forfeitMatch = this.forfeitMatch.bind(this);
   }
 
   componentDidMount() {
     this.props.setGameHeader(true);
     this.checkForOpponent();
+    window.addEventListener('beforeunload', this.forfeitMatch);
+    window.addEventListener('beforeunload', this.componentCleanup);
   }
 
   componentWillUnmount() {
     this.props.setGameHeader(false);
+    window.removeEventListener('beforeunload', this.forfeitMatch);
+    window.removeEventListener('beforeunload', this.componentCleanup);
   }
+
+  forfeitMatch(e){
+    if (this.state.them.username === this.props.user && !this.state.end) {
+      let winner = this.state.me.username;
+      this.moveCurrenttoCompleteNoDelay(winner);
+    } else if (this.state.me.username === this.props.user && !this.state.end) {
+      let winner = this.state.them.username;
+      this.moveCurrenttoCompleteNoDelay(winner);
+    }
+  } 
+
+  componentCleanup() {
+    this.setState({ end: true });
+  }
+
 
   checkForOpponent() {
     // Poll the server for an opponent
@@ -57,8 +80,10 @@ class TicTacToeInGame extends Component {
           // The data we are going to send in our request
           let data = {
             playerOne: this.props.user,
+            playerOneImage: document.querySelector(".avatar-header").src,
             game: "tictactoe"
           };
+
           // Create our request constructor with all the parameters we need
           const request = new Request(url, {
             method: "post",
@@ -85,7 +110,8 @@ class TicTacToeInGame extends Component {
         if (json.playerOne !== this.props.user && json.playerTwo === "") {
           const url = "/currentgame/" + json._id;
           let dataSend = {
-            playerTwo: this.props.user
+            playerTwo: this.props.user,
+            playerTwoImage: document.querySelector(".avatar-header").src
           };
           const request = new Request(url, {
             method: "PATCH",
@@ -107,46 +133,177 @@ class TicTacToeInGame extends Component {
           data = {
             me: {
               username: retrieved.playerOne,
+              image: retrieved.playerOneImage,
               winstreak: 21,
               id: 6,
               symbol: "x"
             },
             them: {
               username: dataSend.playerTwo,
+              image: dataSend.playerTwoImage,
               winstreak: 14,
               id: 14,
               symbol: "o"
             }
           };
-          this.setState({ me: data.me, them: data.them, _id: json._id });
+
+          this.setState({ me: data.me, them: data.them, _id: json._id,  startTime: new Date()});
           this.checkForGameStateChange();
         } else if (json.playerOne !== "" && json.playerTwo !== "") {
           data = {
             me: {
               username: retrieved.playerOne,
+              image: retrieved.playerOneImage,
               winstreak: 21,
               id: 6,
               symbol: "x"
             },
             them: {
               username: retrieved.playerTwo,
+              image: retrieved.playerTwoImage,
               winstreak: 14,
               id: 14,
               symbol: "o"
             }
           };
-          this.setState({ me: data.me, them: data.them, _id: json._id });
+
+          const url = "/currentgame/" + json._id;
+          let dataSend = {
+            startOfLastTurn: Date.now(),
+          };
+          const request = new Request(url, {
+            method: "PATCH",
+            body: JSON.stringify(dataSend),
+            headers: {
+              Accept: "application/json, text/plain, */*",
+              "Content-Type": "application/json"
+            }
+          });
+
+          fetch(request)
+            .then(function(res) {
+
+          })
+          .catch(error => {
+              console.log(error);
+          });
+
+          this.setState({ me: data.me, them: data.them, _id: json._id, startTime: new Date() });
           this.checkForGameStateChange();
         } else {
-          setTimeout(this.checkForOpponent, 1000);
+          if (!this.state.end) {
+            setTimeout(this.checkForOpponent, 1000);
+
+          }
         }
       } else {
+        if (!this.state.end) {
           setTimeout(this.checkForOpponent, 1000);
+        }
       }
       })
       .catch(error => {
         console.log(error);
       });
+  }
+
+  moveCurrenttoComplete(winner) {
+    const url = "/completegame";
+    // The data we are going to send in our request
+    let data = {
+      startTime: this.state.startTime,
+      playerOne: this.state.me.username,
+      playerTwo: this.state.them.username,
+      winner: winner,
+      game: "Tic-Tac-Toe"
+    };
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+    fetch(request)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      const url_delete = "/currentgame/" + this.state._id;
+
+      const request_delete = new Request(url_delete, {
+        method: "delete",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        }
+      });
+
+      setTimeout(function () {
+      fetch(request_delete)
+        .then(function(res) {
+
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }, 1100);
+  }
+
+  moveCurrenttoCompleteNoDelay(winner) {
+    const url_delete = "/currentgame/" + this.state._id;
+
+    const request_delete = new Request(url_delete, {
+      method: "delete",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+
+    fetch(request_delete)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      
+    const url = "/completegame";
+    // The data we are going to send in our request
+    let data = {
+      startTime: this.state.startTime,
+      playerOne: this.state.me.username,
+      playerTwo: this.state.them.username,
+      winner: winner,
+      game: "Tic-Tac-Toe"
+    };
+    // Create our request constructor with all the parameters we need
+    const request = new Request(url, {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    });
+
+    fetch(request)
+      .then(function(res) {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+
   }
 
   checkForGameStateChange() {
@@ -156,7 +313,17 @@ class TicTacToeInGame extends Component {
         if (res.status === 200) {
            return res.json();
        } else {
-            alert('Error')
+        if (this.state.turn === "o") {
+          this.setState({ turn: "x" });
+        } else {
+          this.setState({ turn: "o" });
+        }
+         let check = this.checkForEndGame(this.state.turn);
+         if (check == 'gameforfeit') {
+           alert('Other player has forfeited the match, you win!');
+         }
+         
+         this.setState({ end: true });
        }
     })
     .then((json) => {
@@ -164,20 +331,26 @@ class TicTacToeInGame extends Component {
         || this.state["top-right-ttt"] !== json['top-right-ttt'] || this.state["middle-left-ttt"] !== json['middle-left-ttt'] || this.state["middle-center-ttt"] !== json['middle-center-ttt']
         || this.state["middle-right-ttt"] !== json['middle-right-ttt'] || this.state["bottom-left-ttt"] !== json['bottom-left-ttt'] || this.state["bottom-center-ttt"] !== json['bottom-center-ttt']
         || this.state["bottom-right-ttt"] !== json['bottom-right-ttt']) {
-          delete json['_id'];
-          this.setState(json);
-          if (this.state.turn === "o") {
-            this.setState({ turn: "x" });
-          } else {
-            this.setState({ turn: "o" });
-          }
+          // if ((this.state.turn === "o" && this.state.them.username !== this.props.user) || (this.state.turn === "x" && this.state.me.username !== this.props.user)) {
+            delete json['_id'];
+            this.setState(json);
+            if (this.state.turn === "o") {
+              this.setState({ turn: "x" });
+            } else {
+              this.setState({ turn: "o" });
+            }
+          // }
+        }
+        if (!this.state.end) {
+          let timer;
+          clearTimeout(timer);
+          timer = setTimeout(this.checkForGameStateChange, 1000);
         }
 
     }).catch((error) => {
         console.log(error)
     })
 
-    setTimeout(this.checkForGameStateChange, 200);
 
   }
 
@@ -185,68 +358,81 @@ class TicTacToeInGame extends Component {
     e.preventDefault();
     if (!this.state.end && this.state[e.currentTarget.id] === "empty") {
       if (this.state.turn === "o") {
+        if (this.state.them.username === this.props.user) {
         const turn = this.state.turn;
+        const event_save = e.currentTarget.id
 
-        const url = "/currentgamemoves/" + this.state._id;
-        const currentPos = e.currentTarget.id
-        let dataSend = {
+          this.setState({ [e.currentTarget.id]: "o" }, () => {
+            const url = "/currentgamemoves/" + this.state._id;
+            const currentPos = event_save
+            let dataSend = {
 
-        };
-        dataSend[currentPos] = "o"
-        const request = new Request(url, {
-          method: "PATCH",
-          body: JSON.stringify(dataSend),
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-          }
-        });
+            };
+            dataSend[currentPos] = "o"
+            const request = new Request(url, {
+              method: "PATCH",
+              body: JSON.stringify(dataSend),
+              headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+              }
+            });
 
-        fetch(request)
-          .then(function(res) {
+            fetch(request)
+              .then(function(res) {
 
-          })
-          .catch(error => {
-            console.log(error);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+            this.checkForEndGame(turn);
           });
 
-        this.setState({ [e.currentTarget.id]: "o" }, () => {
-          this.checkForEndGame(turn);
-        });
+          this.setState({ turn: "x" });
 
-        this.setState({ turn: "x" });
+
       } else {
+        alert('Not your turn yet!');
+      }
+      } else {
+        if (this.state.me.username == this.props.user) {
         const turn = this.state.turn;
+        const event_save = e.currentTarget.id
 
-        const url = "/currentgamemoves/" + this.state._id;
-        const currentPos = e.currentTarget.id
-        let dataSend = {
+          this.setState({ [e.currentTarget.id]: "x" }, () => {
+            const url = "/currentgamemoves/" + this.state._id;
+            const currentPos = event_save
+            let dataSend = {
 
-        };
-        dataSend[currentPos] = "x"
-        const request = new Request(url, {
-          method: "PATCH",
-          body: JSON.stringify(dataSend),
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-          }
-        });
+            };
+            dataSend[currentPos] = "x"
+            const request = new Request(url, {
+              method: "PATCH",
+              body: JSON.stringify(dataSend),
+              headers: {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+              }
+            });
 
-        fetch(request)
-          .then(function(res) {
+            fetch(request)
+              .then(function(res) {
 
-          })
-          .catch(error => {
-            console.log(error);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+
+            this.checkForEndGame(turn);
           });
 
-        this.setState({ [e.currentTarget.id]: "x" }, () => {
-          this.checkForEndGame(turn);
-        });
+          this.setState({ turn: "o" });
 
-        this.setState({ turn: "o" });
+      } else {
+        alert('Not your turn yet!')
       }
+    }
     }
   }
 
@@ -257,12 +443,17 @@ class TicTacToeInGame extends Component {
       me.winstreak = this.state.me.winstreak + 1;
       console.log(me);
       this.setState({ me: me });
+      this.moveCurrenttoComplete(this.state.me.username);
+
+
     } else if (turn === this.state.them.symbol) {
       alert(this.state.them.username + " wins!");
       const them = this.state.them;
       them.winstreak = this.state.them.winstreak + 1;
       console.log(them);
       this.setState({ them: them });
+      this.moveCurrenttoComplete(this.state.them.username);
+
     }
   }
 
@@ -329,15 +520,28 @@ class TicTacToeInGame extends Component {
     for (i = 0; i < 9; i++) {
       if (this.state[spots[i]] === "empty") {
         this.setState({ end: false });
-        return;
+        return 'gameforfeit';
       }
     }
     alert("Game over, it's a tie!");
     this.setState({ end: true });
+
+    this.moveCurrenttoComplete("tie");
+
   }
 
   render() {
+
+
     if (this.state.them) {
+      const  playerOneImageUrl  = {
+        backgroundImage: 'url(' + this.state.me.image + ')'
+    }
+
+    const  playerTwoImageUrl  = {
+      backgroundImage: 'url(' + this.state.them.image + ')'
+    }
+
       return (
         <div id="inGame">
           <div id="inGameHeader">
@@ -346,7 +550,7 @@ class TicTacToeInGame extends Component {
                 <div className="player-name text-center">
                   {this.state.me.username}
                 </div>
-                <div className="player-avatar" />
+                <div className="player-avatar" style={playerOneImageUrl} />
               </div>
             </div>
 
@@ -362,7 +566,7 @@ class TicTacToeInGame extends Component {
                 <div className="player-name text-center">
                   {this.state.them.username}
                 </div>
-                <div className="player-avatar" />
+                <div className="player-avatar" style={playerTwoImageUrl} />
               </div>
             </div>
           </div>

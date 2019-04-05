@@ -4,10 +4,12 @@ const log = console.log;
 
 const express = require("express");
 const path = require("path");
+const http = require('http');
 const port = process.env.PORT || 5000;
 const bodyParser = require("body-parser"); // middleware for parsing HTTP body
 const session = require('express-session');
 const { ObjectID } = require("mongodb");
+const moment = require('moment');
 
 const { mongoose } = require("./db/mongoose");
 
@@ -148,10 +150,40 @@ app.get("/user/:id", (req, res) => {
   }
 })
 
+
+app.get("/user/:username", (req, res) => {
+  const id = req.params.username;
+  if (!ObjectID.isValid(id)) {
+    res.status(404).send();
+  } else {
+    User.findOne({username: username})
+      .then((user) => {
+        res.send(user);
+      }).catch((err) => {
+        res.status(500).send(err);
+      })
+  }
+})
+
 app.get("/allusers", (req, res) => {
   User.find({
-    isBanned: false, 
+    isBanned: false,
     isPending: false,
+    role: "user"
+  }).then(function (users) {
+      if (!users) {
+        res.status(404).send();
+      } else {
+        res.send(users);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
+
+app.get("/allusersforadmin", (req, res) => {
+  User.find({
     role: "user"
   }).then(function (users) {
       if (!users) {
@@ -342,7 +374,7 @@ app.get("/user/:id/stats", (req, res) => {
                 winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
-              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
               winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
               i++;
             }
@@ -362,7 +394,7 @@ app.get("/user/:id/stats", (req, res) => {
 app.get("/currentuser/stats", (req, res) => {
     // TODO: get the currently logged in user's id
     const id = "5ca300727c3d0b6d2bee77ae"
-    
+
     // Needed:
     // hours played (itemized by game)
     // games played (itemized by game)
@@ -411,14 +443,13 @@ app.get("/currentuser/stats", (req, res) => {
                 winStreak["Overall"] = 0
               }
               gamesPlayed[games[i].game] += 1
-              timePlayed[games[i].game] += (new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime())
+              timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
               winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
               i++;
             }
 
             winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
             winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
-
             res.send({ username: user.username, timePlayed, gamesPlayed, winStreak, winPercent })
           })
       })
@@ -427,12 +458,34 @@ app.get("/currentuser/stats", (req, res) => {
       })
 })
 
+app.get('/currentuser/info', (req, res) => {
+
+  // TODO: get the currently logged in user's id
+  const id = "5ca300727c3d0b6d2bee77ae"
+
+
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()
+	}
+
+	User.findById(id).then((user) => {
+		if (!user) {
+			res.status(404).send()
+		} else {
+			res.send(user)
+
+		}
+	}).catch((error) => {
+		res.status(500).send()
+	})
+
+})
+
 /*  GAMEPLAY ENDPOINTS  */
 
 app.get("/getopponent/:game", (req, res) => {
   const game = req.params.game
-  CurrentGame.findOne({})
-    .where('game').equals('tictactoe')
+  CurrentGame.findOne({game: game, startOfLastTurn: ""})
     .then(function (currentgame) {
       if (!currentgame) {
         res.status(404).send();
@@ -447,14 +500,16 @@ app.get("/getopponent/:game", (req, res) => {
 
 app.post('/currentgame', (req, res) => {
   const currentgame = new CurrentGame({
-    "startTime": "",
+    "startTime": Date.now(),
     "playerOne": req.body.playerOne,
+    "playerOneImage": req.body.playerOneImage,
     "playerTwo": "",
+    "playerTwoImage": "",
     "turn": "x",
     "startOfLastTurn": "",
     "game": req.body.game,
     "moves":
-      { "top-left-ttt": "empty", "top-center-ttt": "empty", "top-right-ttt": "empty", "middle-left-ttt": "empty", "middle-center-ttt": "empty", "middle-right-ttt": "empty", "bottom-left-ttt": "empty", "bottom-center-ttt": "empty", "bottom-right-ttt": "empty" }
+      { "lastmove": "empty", "top-left-ttt": "empty", "top-center-ttt": "empty", "top-right-ttt": "empty", "middle-left-ttt": "empty", "middle-center-ttt": "empty", "middle-right-ttt": "empty", "bottom-left-ttt": "empty", "bottom-center-ttt": "empty", "bottom-right-ttt": "empty" }
   })
 
   currentgame.save().then((currentgame) => {
@@ -462,6 +517,43 @@ app.post('/currentgame', (req, res) => {
   }).catch((error) => {
     res.status(400).send(error)
   })
+})
+
+app.post('/completegame', (req, res) => {
+  const completegame = new CompleteGame({
+    "_id": req.body._id,
+    "startTime":  moment(req.body.startTime).format('YYYY-MM-DDTHH:mm:ss'),
+    "endTime":  moment().format('YYYY-MM-DDTHH:mm:ss'),
+    "playerOne": req.body.playerOne,
+    "playerTwo": req.body.playerTwo,
+    "winner": req.body.winner,
+    "game": req.body.game
+  })
+  completegame.save().then((completegame) => {
+    console.log(completegame)
+    res.send(completegame)
+  }).catch((error) => {
+    res.status(400).send(error)
+    log(error)
+  });
+
+});
+
+app.delete('/currentgame/:id', (req, res) => {
+	// Add code here
+	const id = req.params.id
+  console.log(id)
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()
+	}
+  CurrentGame.findByIdAndRemove(id, function(error) {
+      if (error) {
+          res.status(400).send(error);
+      } else {
+          res.send(id);
+      }
+  });
+
 })
 
 app.patch('/currentgame/:id', (req, res) => {
@@ -487,7 +579,6 @@ app.get('/currentgamemoves/:id', (req, res) => {
   if (!ObjectID.isValid(id)) {
     res.status(404).send()
   }
-
   CurrentGame.findById(id).then((currentgame) => {
     if (!currentgame) {
       res.status(404).send()

@@ -25,7 +25,7 @@ class Admin extends Component {
   }
 
   fetchUsers() {
-    fetch('/allusers').then((response) => {
+    fetch('/allusersforadmin').then((response) => {
       if (response.status !== 200) {
         throw new Error(response.statusText);
       } else {
@@ -156,7 +156,7 @@ class Admin extends Component {
                 <div className="user-description">
                   <div className="text-center">{user.username}</div>
                 </div>
-                <div className="user-avatar"></div>
+                <div className="user-avatar" style={{ backgroundImage: 'url(' + user.uri + ')' }}></div>
                 <div className="user-buttons-container text-center">
                   {user.isBanned ?
                     <button className="reinstate-user" onClick={this.reinstateUser(user._id)}>REINSTATE</button>

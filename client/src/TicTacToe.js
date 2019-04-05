@@ -10,10 +10,10 @@ class TicTacToe extends Component {
     this.state = {
       userData: null
     }
-    
+
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
   }
-  
+
   componentDidMount() {
     this.fetchUserInfo();
   }
@@ -30,7 +30,7 @@ class TicTacToe extends Component {
         const data = {
           username: json.username,
           winstreak: json.winStreak["Overall"],
-          hoursPlayed: (json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000),
+          hoursPlayed: Math.round((json.timePlayed["Tic-Tac-Toe"] + json.timePlayed["Checkers"]) / (60 * 60 * 1000)),
           gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"] + json.gamesPlayed["Checkers"],
           checkersStats: {
             hoursPlayed: json.timePlayed["Checkers"] / (60 * 60 * 1000),
@@ -38,7 +38,7 @@ class TicTacToe extends Component {
             winPercent: json.winPercent["Checkers"].map(elem => (elem * 100).toFixed(1))
           },
           tictactoeStats: {
-            hoursPlayed: json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000),
+            hoursPlayed: Math.round(json.timePlayed["Tic-Tac-Toe"] / (60 * 60 * 1000)),
             gamesPlayed: json.gamesPlayed["Tic-Tac-Toe"],
             winPercent: json.winPercent["Tic-Tac-Toe"].map(elem => (elem * 100).toFixed(1))
           }
@@ -55,11 +55,11 @@ class TicTacToe extends Component {
     if (!data) {
       return (<div>LOADING</div>);
     }
-    
+
     const lineDataTicTacToe = {
       labels: [
-        '4 Games Ago', '3 Games Ago', 
-        '2 Games Ago', '1 Game Ago', 
+        '4 Games Ago', '3 Games Ago',
+        '2 Games Ago', '1 Game Ago',
         'Current'
       ],
       datasets: [
@@ -108,7 +108,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.hoursPlayed}</h1></span>
+                <span className="green"><h1>{data.tictactoeStats.hoursPlayed}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -128,7 +128,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.gamesPlayed}</h1></span> <br />
+                <span className="green"><h1>{data.tictactoeStats.gamesPlayed}</h1></span> <br />
               </span>
               Games Played
             </span>

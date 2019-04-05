@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import avatar from "./avatar.jpeg";
 import "./App.css";
 import UserMain from "./UserMain";
 import Trophy from "./Trophy";
@@ -14,10 +13,16 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameHeader: false
+      gameHeader: false,
+      uri: null
     };
     this.redirectToLogin = this.redirectToLogin.bind(this);
     this.setGameHeader = this.setGameHeader.bind(this);
+    this.fetchUser = this.fetchUser.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchUser();
   }
 
   redirectToLogin(e) {
@@ -29,6 +34,27 @@ class Home extends Component {
     this.setState({ gameHeader: state });
   }
 
+  fetchUser() {
+      // BACKEND CALL
+      fetch(`/currentuser/info`).then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      }).then((json) => {
+        this.setState({ uri: json.uri });
+      }).catch((err) => {
+        alert(err.message)
+      });
+  }
+
+  //
+  // setUserInfo(uri){
+  //     this.setState({
+  //        uri: uri
+  //     });
+  // }
 
   render() {
     return (
@@ -62,7 +88,7 @@ class Home extends Component {
 
                 <div className="dropdown">
                   <div id="profileMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img className="avatar-header" src={avatar} />
+                    <img className="avatar-header" src={this.state.uri} />
                     <span>
                       {this.props.user}<i className="fas fa-chevron-down" />
                     </span>
