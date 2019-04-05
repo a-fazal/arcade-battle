@@ -35,27 +35,30 @@ const UserSchema = new mongoose.Schema({
 	},
 }, { collection: 'User' });
 
-UserSchema.statics.findByNamePassword = function (name, password) {
+UserSchema.statics.findByUsernamePassword = function (username, password) {
 	const User = this;
-
-	return User.findOne({ username: name, password: password }).then((user) => {
+	return User.findOne({ username: username }).then((user) => {
 		if (!user) {
 			return Promise.reject();
 		}
 
+		 
 		return new Promise((resolve, reject) => {
 			bcrypt.compare(password, user.password, (error, result) => {
 				if (result) {
+
 					resolve(user);
 				} else {
+
 					reject();
 				}
 			});
 		});
+		
 	});
 }
 
-/*
+
 UserSchema.pre('save', function(next) {
   // Check if document is new or a new password has been set
   if (this.isNew || this.isModified('password')) {
@@ -75,7 +78,7 @@ UserSchema.pre('save', function(next) {
     next();
   }
 });
-*/
+
 
 const User = mongoose.model('User', UserSchema)
 
