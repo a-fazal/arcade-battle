@@ -1,0 +1,51 @@
+The website is located at:
+https://arcade-battle.herokuapp.com/
+
+How to run locally
+You can clone the repo with
+
+git clone https://github.com/csc309-winter-2019/team17.git
+(or download as a zip)
+
+Then
+
+cd team17
+(or where you saved the folder)
+
+And
+
+npm install
+cd client
+npm install
+Then
+
+cd ..
+npm run dev
+
+A browser window should automatically open up. The first screen you should see when the web application is started is the login page.
+
+The features are generally the same as Phase 1, so here is a rehash of the features:
+User Instructions and Features:
+-You can login with the default user (username: user, password: user) or (username: user2, password: user2), there is also an option to register.
+-For the user, you will see the main screen with their overall game stats in the center. 
+-On the side displays some game links, the main one we want to showcase is Tic-Tac-Toe.  
+-If you click on Tic-Tac-Toe, you are taken to a start screen where you can see some specific stats for you about the game.
+-If you press start, then after an opponent is selected the game will start. You can open up two browsers logged in as *different* users in order for this to work.
+  You can now play Tic-Tac-Toe on the game board and see your opponent on the left as well as win-streak stats in the center.
+  The game will end when there are X's or O's along an axis or diagonal on the board, and that respective user will win.
+-As for some other user features, on the header navigation bar, you can click the trophy icon to see the players the user has defeated.
+-You can also click on the user picture on the top right and view your profile, or logout.
+
+Admin Instructions and Features:
+-You can login with the admin (username: admin, password: admin)
+-For the admin, there is an admin dashboard, here the admin can approve users, ban users, reinstate users, and modify users.
+-If you click on a user, you are taken to a page with detailed user stats for each game, from there you can choose to modify their user information.
+
+Overview of routes:
+-Login and register: POST endpoints which make use of hashing to store password in a mongodb
+-User stats: GET endpoints, the games the logged in user (from current session) has played and calculate the hours played and win stats from that (for specific games as well) for the data charts.
+-Defated opponents: GET endpoints, list the player the logged in user has won against
+-Profile: PATCH endpoints to change username and password
+-In Game: GET, PATCH and POST endpoints, first there is a GET polling loop to find an opponent (otherwise POST endpoint to create a game) then the game itself 
+has PATCH endpoints to update the game board and GET endpoints for more polling loops to wait for opponents turn. Then a DELETE and POST endpoint to move the game in progress to a completed game once the game is over
+-Admin: PATCH endpoints to ban, approve and view all users. 
