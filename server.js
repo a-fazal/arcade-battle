@@ -91,6 +91,49 @@ app.post('/resetdata', (req, res) => {
 })
 
 /*  USER ENDPOINTS  */
+app.post("/user/register", (req, res) => {
+  const name = req.body.username;
+  const pass = req.body.password;
+
+  const user = new User({
+    username: name,
+    password: pass,
+    uri: "/avatars/staravatar.jpg",
+    role: "user",
+    isPending: true,
+    isBanned: false
+  })
+
+  user.save().then((result) => {
+    res.send(result)
+  }, (error) => {
+    console.log(error)
+    res.status(500).send(error);
+  })
+})
+
+app.post("/user/login", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  User.findByUsernamePassword(username, password).then((user) => {
+    if (!user|| user.isBanned){
+      console.log(user)
+      console.log('hello')
+      res.send("Invalid username or password.");
+    } else {
+      req.session.user = user._id;
+      if (user.role === 'user') {
+       res.status(200).send(user);
+      } else if (user.role === 'admin') {
+        res.status(300).send(user);
+      }
+    }
+  }).catch((error) => {
+    console.log(error)
+    res.status(500).send(error);
+  })
+})
+
 app.get("/user/:id", (req, res) => {
   const id = req.params.id;
   if (!ObjectID.isValid(id)) {

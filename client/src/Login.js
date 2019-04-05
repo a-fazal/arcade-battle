@@ -10,115 +10,81 @@ class Login extends Component {
     super(props);
     // BACK END
     this.state = {
-      user: "",
-      login: true,
-      registeredUsers: [],
-      registeredAdmins: []
+      login: true
     };
     this.handleClick = this.handleClick.bind(this);
     this.setLogin = this.setLogin.bind(this);
-    this.fetchInfo = this.fetchInfo.bind(this);
-    this.state.registeredUsers.push(new User("user", "user"));
-    this.state.registeredUsers.push(new User("user2", "user2"));
-    this.state.registeredAdmins.push(new User("admin", "admin"));
-  }
-
-  componentDidMount(){
-    this.fetchInfo();
-  }
-
-  fetchInfo() {
-    // Get registered users
-    fetch('/allusers').then((response) => {
-      if (response.status !== 200) {
-        throw new Error(response.statusText);
-      } else {
-        return response.json();
-      }
-    }).then((json) => {
-      this.setState({registeredUsers: json})
-    }).catch((error) => {
-      alert(error.message);
-    })
-
-    // Get all admins
-    fetch('/alladmins').then((response) => {
-      if (response.status !== 200) {
-        throw new Error(response.statusText);
-      } else {
-        return response.json();
-      }
-    }).then((json) => {
-      this.setState({registeredAdmins: json})
-    }).catch((error) => {
-      alert(error.message);
-    })
   }
 
   handleClick(e) {
     e.preventDefault();
+    // Check if session already has a logged in user
     if (this.state.login) {
-      /*
-      fetch('/user/login').then((response) => {
-        if (response.status !== 200) {
-          throw new Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      }).catch((err) => {
-        alert("Invalid username or password.")
-      })
-      */
       const user = document.querySelector("#userInput").value;
-      const password = document.querySelector("#passwordInput").value;
-      let authenticated = false;
+      const pass = document.querySelector("#passwordInput").value;
+      let data = {
+        username: user,
+        password: pass
+      }
       // Server call to backend for user/admin authentication
-      for (let i = 0; i < this.state.registeredUsers.length; i++) {
-        if (
-          user === this.state.registeredUsers[i].user &&
-          password === this.state.registeredUsers[i].password
-        ) {
-          this.setState({ user: user });
-          authenticated = true;
-          this.props.setUser(user);
-          this.props.history.push("/home");
+      // Login the user
+      fetch('/user/login', {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
         }
-      }
-      for (let i = 0; i < this.state.registeredAdmins.length; i++) {
-        // Server call to backend for user/admin authentication
-        if (
-          user === this.state.registeredAdmins[i].user &&
-          password === this.state.registeredAdmins[i].password
-        ) {
-          this.setState({ user: user });
-          authenticated = true;
-          this.props.setUser(user);
-          this.props.history.push("/admin");
+      }).then((user) => {
+        console.log(user)
+        console.log(user.status)
+        console.log(typeof user)
+        if (typeof user === 'string') {
+          alert(user);
+        } else {
+          if (user.status === 300) {
+            this.props.history.push("/admin");
+          } else if (user.status === 200) {
+            this.props.history.push("/home");
+          }
         }
-      }
-      if (!authenticated) {
-        alert("Wrong password or username.");
-      }
+      }).catch((error) => {
+        alert(error);
+      })
     } else {
       // Server call to backend to add users for registration
       const user = document.querySelector("#userInput").value;
       const password = document.querySelector("#passwordInput").value;
       const confirmPassword = document.querySelector("#confirmPasswordInput").value;
+      let data = {
+        username: user,
+        password: password
+      }
       if (confirmPassword !== password) {
         alert('Passwords must match.')
       } else {
+        // Make sure user doesn't already exist
         let userExists = false;
-        for (let i = 0; i < this.state.registeredUsers.length; i++) {
-          if (
-            user === this.state.registeredUsers[i].user
-          ) {
-            alert('User already exists!');
-            userExists = true;
-            break;
+        fetch('/allusers').then((users) => {
+          for (let i = 0; i < users.length; i++) {
+            if (user === users[i].username) {
+              alert('User already exists!');
+              userExists = true;
+              break;
+            }
           }
-        }
+        }).catch((error) => {
+          alert(error);
+        })
       if (!userExists) {
-        this.state.registeredUsers.push(new User(user, password));
+        fetch('/user/register', {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).catch((error) => {
+          alert(error);
+        })
         alert("Successfuly Registered! Please login.");
         this.setState({ login: true });
       }
