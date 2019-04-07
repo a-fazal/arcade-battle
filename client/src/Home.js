@@ -4,6 +4,7 @@ import UserMain from "./UserMain";
 import Trophy from "./Trophy";
 import TicTacToe from "./TicTacToe";
 import TicTacToeInGame from "./TicTacToeInGame";
+import CheckersInGame from "./CheckersInGame";
 import Checkers from "./Checkers";
 import Profile from "./Profile";
 import { BrowserRouter as Router, Route, Link, Switch, withRouter } from "react-router-dom";
@@ -143,6 +144,7 @@ class Home extends Component {
                   <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
                   <Route exact path="/user" render={() => <Profile user={this.props.user} />} />
                   <Route exact path="/tictactoeingame" render={() => <TicTacToeInGame user={this.props.user} setGameHeader={this.setGameHeader} />} />
+                  <Route exact path="/checkersingame" render={() => <CheckersInGame user={this.props.user} setGameHeader={this.setGameHeader} />} />
                   <Route exact path="/user/:id" render={(props) => <UserProfile user={this.props.user} {...props}/>} />
                 </Switch>
 
