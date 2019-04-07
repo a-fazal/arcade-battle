@@ -39,6 +39,7 @@ class Login extends Component {
           alert(user);
         } else {
           if (user.status === 300) {
+            this.props.setUser("admin");
             this.props.history.push("/admin");
           } else if (user.status === 200) {
             this.props.setUser(data.username)
