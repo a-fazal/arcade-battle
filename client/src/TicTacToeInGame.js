@@ -42,7 +42,7 @@ class TicTacToeInGame extends Component {
     }
       window.addEventListener('beforeunload', this.forfeitMatch);
       window.addEventListener('beforeunload', this.componentCleanup);
-      
+
   }
 
   componentWillUnmount() {
@@ -59,7 +59,7 @@ class TicTacToeInGame extends Component {
       let winner = this.state.them.username;
       this.moveCurrenttoCompleteNoDelay(winner);
     }
-  } 
+  }
 
   componentCleanup() {
     this.setState({ end: true });
@@ -251,11 +251,16 @@ class TicTacToeInGame extends Component {
       setTimeout(function () {
       fetch(request_delete)
         .then(function(res) {
+          if (winner !== 'tie') {
+            alert(winner+ ' wins!')
+          } else {
+            alert('Game over, Its a tie!')
+          }
         })
         .catch(error => {
           console.log(error);
         });
-      }, 1100);
+      }, 1000);
   }
 
   moveCurrenttoCompleteNoDelay(winner) {
@@ -315,17 +320,13 @@ class TicTacToeInGame extends Component {
         if (res.status === 200) {
            return res.json();
        } else {
-        if (this.state.turn === "o") {
-          this.setState({ turn: "x" });
-        } else {
-          this.setState({ turn: "o" });
-        }
-         let check = this.checkForEndGame(this.state.turn);
-         if (check == 'gameforfeit') {
+        if (!this.state.end) {
+
            alert('Other player has forfeited the match, you win!');
-         }
          
+
          this.setState({ end: true });
+       }
        }
     })
     .then((json) => {
@@ -336,6 +337,7 @@ class TicTacToeInGame extends Component {
           // if ((this.state.turn === "o" && this.state.them.username !== this.props.user) || (this.state.turn === "x" && this.state.me.username !== this.props.user)) {
             delete json['_id'];
             this.setState(json);
+            let check = this.checkForEndGame(this.state.turn);
             if (this.state.turn === "o") {
               this.setState({ turn: "x" });
             } else {
@@ -343,10 +345,11 @@ class TicTacToeInGame extends Component {
             }
           // }
         }
+
         if (!this.state.end) {
           let timer;
           clearTimeout(timer);
-          timer = setTimeout(this.checkForGameStateChange, 1000);
+          timer = setTimeout(this.checkForGameStateChange, 500);
         }
 
     }).catch((error) => {
@@ -440,7 +443,7 @@ class TicTacToeInGame extends Component {
 
   gameOverMessage(turn) {
     if (turn === this.state.me.symbol) {
-      alert(this.state.me.username + " wins!");
+
       const me = this.state.me;
       me.winstreak = this.state.me.winstreak + 1;
       console.log(me);
@@ -449,7 +452,7 @@ class TicTacToeInGame extends Component {
 
 
     } else if (turn === this.state.them.symbol) {
-      alert(this.state.them.username + " wins!");
+
       const them = this.state.them;
       them.winstreak = this.state.them.winstreak + 1;
       console.log(them);
@@ -525,7 +528,7 @@ class TicTacToeInGame extends Component {
         return 'gameforfeit';
       }
     }
-    alert("Game over, it's a tie!");
+
     this.setState({ end: true });
 
     this.moveCurrenttoComplete("tie");
