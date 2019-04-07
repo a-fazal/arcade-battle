@@ -9,7 +9,11 @@ class Profile extends Component {
       data: null
     }
     this.changePassword = this.changePassword.bind(this);
+    this.changeMyPassword = this.changeMyPassword.bind(this);
+    this.changeOtherPassword = this.changeOtherPassword.bind(this);
     this.changeName = this.changeName.bind(this);
+    this.changeMyName = this.changeMyName.bind(this);
+    this.changeOtherName = this.changeOtherName.bind(this);
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
   }
 
@@ -18,35 +22,70 @@ class Profile extends Component {
   }
 
   fetchUserInfo(){
-    fetch('/user').then((response) => {
-      if (response.status !== 200) {
-          throw new Error(response.statusText);
-        } else {
-          return response.json();
-      }
-    }).then((json) => {
-      this.setState({username: json.username, password: json.password, uri: json.uri});
-    }).catch((error) => {
-      alert(error.message);
-    })
+    if (this.props.match){
+      const id = this.props.match.params.id;
+      fetch(`/user/${id}`).then((response) => {
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+          } else {
+            return response.json();
+        }
+      }).then((json) => {
+        this.setState({username: json.username, uri: json.uri});
+      }).catch((error) => {
+        alert(error.message);
+      })
+    } else {
+      fetch('/user').then((response) => {
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+          } else {
+            return response.json();
+        }
+      }).then((json) => {
+        this.setState({username: json.username, uri: json.uri});
+      }).catch((error) => {
+        alert(error.message);
+      })
+    }
   }
 
   changePassword(e) {
     e.preventDefault();
-    const oldPass = document.querySelector('#oldPass').value;
     const newPass = document.querySelector('#newPass').value;
     const confirmPass = document.querySelector('#confirmPass').value;
+    if(this.props.match){
+      this.changeOtherPassword(this.props.match.params.id, newPass, confirmPass);
+    } else {
+      const oldPass = document.querySelector('#oldPass').value;
+      this.changeMyPassword(oldPass, newPass, confirmPass);
+    }
+  }
+  
+  changeMyPassword(oldPass, newPass, confirmPass){
     if (oldPass.length > 0 && newPass.length > 0 && confirmPass.length > 0) {
-      if (oldPass === this.state.password && newPass === confirmPass && newPass === this.state.password) {
-        alert('You cannot use the old password.');
-      } else if (oldPass === this.state.password && newPass === confirmPass && newPass !== this.state.password) {
-        alert('Succesfully changed your password!');
-        this.setState({password: newPass});
-      } else if (oldPass !== this.state.password) {
-        alert("Your old password doesn't match.");
-      } else if (confirmPass !== newPass) {
-        alert("Confirm your new password again.");
-      }
+      fetch('/currentuser/updatepass', {
+        method: "PATCH",
+        body: JSON.stringify({oldPass, newPass, confirmPass}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          if(response.status == 400) {
+            alert(response.body.msg);
+          } else{
+            throw new Error(response.statusText);
+          }
+        } else {
+          return response.json();
+        }})
+      .then((user) => {
+        alert("Successfully changed password!")
+      }).catch((error) => {
+        alert(error);
+      })
     } else {
       if (oldPass.length === 0){
         alert('Enter your old password.');
@@ -57,21 +96,105 @@ class Profile extends Component {
       }
     }
   }
+  
+  changeOtherPassword(id, newPass, confirmPass){
+    if (newPass.length > 0 && confirmPass.length > 0) {
+      fetch(`/user/${id}/updatepass`, {
+        method: "PATCH",
+        body: JSON.stringify({newPass, confirmPass}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          if(response.status == 400) {
+            alert(response.body.msg);
+          } else{
+            throw new Error(response.statusText);
+          }
+        } else {
+          return response.json();
+        }})
+      .then((user) => {
+        alert("Successfully changed password!")
+      }).catch((error) => {
+        alert(error);
+      })
+    } else {
+      if (newPass.length === 0) {
+        alert('Enter your new password.');
+      } else if (confirmPass.length === 0) {
+        alert('Confirm your new password.');
+      }
+    }
+  }
 
   changeName(e) {
     e.preventDefault();
-    // MODIFY BACK END
     const inputtedName = document.querySelector('#nameInput').value;
+    if(this.props.match){
+      this.changeOtherName(this.props.match.params.id, inputtedName);
+    } else {
+      this.changeMyName(inputtedName);
+    }
+  }
+  
+  changeMyName(inputtedName){
     if (inputtedName.length > 0) {
-      alert('Succesfully changed name!');
-      this.setState({name: inputtedName});
+      fetch('/currentuser/updatename', {
+        method: "PATCH",
+        body: JSON.stringify({newName: inputtedName}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }})
+      .then((user) => {
+        this.props.setUser(user.username)
+        this.setState({username: user.username});
+        alert("Successfully changed name!")
+      }).catch((error) => {
+        alert(error);
+      })
+    } else {
+      alert('Not a valid name');
+    }
+  }
+  
+  changeOtherName(id, inputtedName){
+    if (inputtedName.length > 0) {
+      fetch(`/user/${id}/updatename`, {
+        method: "PATCH",
+        body: JSON.stringify({newName: inputtedName}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }})
+      .then((user) => {
+        this.setState({username: user.username});
+        alert("Successfully changed name!")
+      }).catch((error) => {
+        alert(error);
+      })
     } else {
       alert('Not a valid name');
     }
   }
 
   render() {
-    const data = {username: this.state.username, uri: this.state.uri, password: this.state.username};
+    const data = {username: this.state.username, uri: this.state.uri};
     if (!data) {
       return (<div>LOADING</div>);
     }
@@ -114,8 +237,12 @@ class Profile extends Component {
       			<span className="profile-changes-header">Change password</span>
       			<form>
       			Old password<br/>
+      			{this.props.user !== "admin" &&
+              <>
       			<input type="text" className="form-control" id="oldPass" placeholder="Enter old password"/>
       			<br/>
+      			</>
+            }
       			New password<br/>
       			<input type="text" className="form-control" id="newPass" placeholder="Enter new password" name="newPass"/>
       			<br />

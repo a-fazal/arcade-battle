@@ -141,7 +141,7 @@ class Home extends Component {
                   <Route exact path="/trophy" render={() => <Trophy user={this.props.user} />} />
                   <Route exact path="/tictactoe" render={() => <TicTacToe user={this.props.user} />} />
                   <Route exact path="/checkers" render={() => <Checkers user={this.props.user} />} />
-                  <Route exact path="/user" render={() => <Profile user={this.props.user} />} />
+                  <Route exact path="/user" render={() => <Profile setUser={this.props.setUser} user={this.props.user} />} />
                   <Route exact path="/tictactoeingame" render={() => <TicTacToeInGame user={this.props.user} setGameHeader={this.setGameHeader} />} />
                   <Route exact path="/user/:id" render={(props) => <UserProfile user={this.props.user} {...props}/>} />
                 </Switch>

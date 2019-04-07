@@ -53,40 +53,40 @@ const INIT_USERS = [
 
 const INIT_GAMES = [
     new CompleteGame({
-        startTime: "2016-01-24T18:21:55.000+00:00",
-        endTime: "2016-01-24T21:21:55.000+00:00",
+        startTime: "2016-01-24T18:21:55",
+        endTime: "2016-01-24T21:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user",
         game: "Tic-Tac-Toe"
     }),
     new CompleteGame({
-        startTime: "2016-01-25T18:21:55.000+00:00",
-        endTime: "2016-01-25T21:21:55.000+00:00",
+        startTime: "2016-01-25T18:21:55",
+        endTime: "2016-01-25T21:21:55",
         playerOne: "user2",
         playerTwo: "user",
         winner: "user",
         game: "Tic-Tac-Toe"
     }),
     new CompleteGame({
-        startTime: "2016-01-26T18:21:55.000+00:00",
-        endTime: "2016-01-26T21:21:55.000+00:00",
+        startTime: "2016-01-26T18:21:55",
+        endTime: "2016-01-26T21:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user",
         game: "Tic-Tac-Toe"
     }),
     new CompleteGame({
-        startTime: "2016-01-27T18:21:55.000+00:00",
-        endTime: "2016-01-27T21:21:55.000+00:00",
+        startTime: "2016-01-27T18:21:55",
+        endTime: "2016-01-27T21:21:55",
         playerOne: "user2",
         playerTwo: "user",
         winner: "user2",
         game: "Tic-Tac-Toe"
     }),
     new CompleteGame({
-        startTime: "2016-01-28T18:21:55.000+00:00",
-        endTime: "2016-01-28T21:21:55.000+00:00",
+        startTime: "2016-01-28T18:21:55",
+        endTime: "2016-01-28T21:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user",
@@ -95,40 +95,40 @@ const INIT_GAMES = [
 
 
     new CompleteGame({
-        startTime: "2016-01-24T08:21:55.000+00:00",
-        endTime: "2016-01-24T11:21:55.000+00:00",
+        startTime: "2016-01-24T08:21:55",
+        endTime: "2016-01-24T11:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user2",
         game: "Checkers"
     }),
     new CompleteGame({
-        startTime: "2016-01-25T08:21:55.000+00:00",
-        endTime: "2016-01-25T11:21:55.000+00:00",
+        startTime: "2016-01-25T08:21:55",
+        endTime: "2016-01-25T11:21:55",
         playerOne: "user2",
         playerTwo: "user",
         winner: "user",
         game: "Checkers"
     }),
     new CompleteGame({
-        startTime: "2016-01-26T08:21:55.000+00:00",
-        endTime: "2016-01-26T11:21:55.000+00:00",
+        startTime: "2016-01-26T08:21:55",
+        endTime: "2016-01-26T11:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user2",
         game: "Checkers"
     }),
     new CompleteGame({
-        startTime: "2016-01-27T08:21:55.000+00:00",
-        endTime: "2016-01-27T11:21:55.000+00:00",
+        startTime: "2016-01-27T08:21:55",
+        endTime: "2016-01-27T11:21:55",
         playerOne: "user2",
         playerTwo: "user",
         winner: "user",
         game: "Checkers"
     }),
     new CompleteGame({
-        startTime: "2016-01-28T08:21:55.000+00:00",
-        endTime: "2016-01-28T11:21:55.000+00:00",
+        startTime: "2016-01-28T08:21:55",
+        endTime: "2016-01-28T11:21:55",
         playerOne: "user",
         playerTwo: "user2",
         winner: "user2",
