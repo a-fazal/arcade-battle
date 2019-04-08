@@ -33,7 +33,9 @@ class TicTacToeInGame extends Component {
     this.moveCurrenttoComplete = this.moveCurrenttoComplete.bind(this);
     this.componentCleanup = this.componentCleanup.bind(this);
     this.forfeitMatch = this.forfeitMatch.bind(this);
+
   }
+
 
   componentDidMount() {
       this.props.setGameHeader(true);
@@ -133,39 +135,65 @@ class TicTacToeInGame extends Component {
               console.log(error);
             });
 
-          data = {
-            me: {
-              username: retrieved.playerOne,
-              image: retrieved.playerOneImage,
-              winstreak: 21,
-              id: 6,
-              symbol: "x"
-            },
-            them: {
-              username: dataSend.playerTwo,
-              image: dataSend.playerTwoImage,
-              winstreak: 14,
-              id: 14,
-              symbol: "o"
-            }
-          };
+            data = {
+              me: {
+                username: retrieved.playerOne,
+                image: retrieved.playerOneImage,
+                symbol: "x"
+              },
+              them: {
+                username: dataSend.playerTwo,
+                image: dataSend.playerTwoImage,
+                symbol: "o"
+              }
+            };
 
-          this.setState({ me: data.me, them: data.them, _id: json._id,  startTime: new Date()});
-          this.checkForGameStateChange();
+            const json_game = json;
+           fetch('/userbyname/' + retrieved.playerOne + '/stats').then((response) => {
+              if (response.status !== 200) {
+                throw new Error(response.statusText);
+              } else {
+                return response.json();
+              }
+            }).then((json) => {
+              fetch('/userbyname/' + dataSend.playerTwo + '/stats').then((response) => {
+                 if (response.status !== 200) {
+                   throw new Error(response.statusText);
+                 } else {
+                   return response.json();
+                 }
+               }).then((json) => {
+                 console.log(data)
+                 data.them.winStreak = json["winStreak"]["Tic-Tac-Toe"]
+                 this.setState({ me: data.me, them: data.them, _id: json_game._id,  startTime: new Date()});
+                 this.checkForGameStateChange();
+
+               }).catch((err) => {
+                 // console.log(err)
+                 alert(err.message)
+               });
+              data.me.winStreak = json["winStreak"]["Tic-Tac-Toe"]
+
+            }).catch((err) => {
+              // console.log(err)
+              alert(err.message)
+            });
+
+
+
+
+
         } else if (json.playerOne !== "" && json.playerTwo !== "") {
+
           data = {
             me: {
               username: retrieved.playerOne,
               image: retrieved.playerOneImage,
-              winstreak: 21,
-              id: 6,
               symbol: "x"
             },
             them: {
               username: retrieved.playerTwo,
               image: retrieved.playerTwoImage,
-              winstreak: 14,
-              id: 14,
               symbol: "o"
             }
           };
@@ -191,8 +219,40 @@ class TicTacToeInGame extends Component {
               console.log(error);
           });
 
-          this.setState({ me: data.me, them: data.them, _id: json._id, startTime: new Date() });
-          this.checkForGameStateChange();
+          const json_game = json;
+          fetch('/userbyname/' + retrieved.playerOne + '/stats').then((response) => {
+             if (response.status !== 200) {
+               throw new Error(response.statusText);
+             } else {
+               return response.json();
+             }
+           }).then((json) => {
+             data.me.winStreak = json["winStreak"]["Tic-Tac-Toe"]
+             fetch('/userbyname/' + retrieved.playerTwo + '/stats').then((response) => {
+                if (response.status !== 200) {
+                  throw new Error(response.statusText);
+                } else {
+                  return response.json();
+                }
+              }).then((json) => {
+                data.them.winStreak = json["winStreak"]["Tic-Tac-Toe"]
+                this.setState({ me: data.me, them: data.them, _id: json_game._id,  startTime: new Date()});
+                this.checkForGameStateChange();
+
+              }).catch((err) => {
+                // console.log(err)
+                alert(err.message)
+              });
+
+           }).catch((err) => {
+             // console.log(err)
+             alert(err.message)
+           });
+
+
+
+
+
         } else {
           if (!this.state.end) {
             setTimeout(this.checkForOpponent, 1000);
@@ -323,7 +383,7 @@ class TicTacToeInGame extends Component {
         if (!this.state.end) {
 
            alert('Other player has forfeited the match, you win!');
-         
+
 
          this.setState({ end: true });
        }
@@ -445,8 +505,7 @@ class TicTacToeInGame extends Component {
     if (turn === this.state.me.symbol) {
 
       const me = this.state.me;
-      me.winstreak = this.state.me.winstreak + 1;
-      console.log(me);
+      me.winStreak = this.state.me.winStreak + 1;
       this.setState({ me: me });
       this.moveCurrenttoComplete(this.state.me.username);
 
@@ -454,8 +513,7 @@ class TicTacToeInGame extends Component {
     } else if (turn === this.state.them.symbol) {
 
       const them = this.state.them;
-      them.winstreak = this.state.them.winstreak + 1;
-      console.log(them);
+      them.winStreak = this.state.them.winStreak + 1;
       this.setState({ them: them });
       this.moveCurrenttoComplete(this.state.them.username);
 
@@ -562,7 +620,7 @@ class TicTacToeInGame extends Component {
             <div id="winstreaks">
               <div className="winstreak-label text-center">WINSTREAKS</div>
               <div className="winstreaks-amount text-center">
-                {this.state.me.winstreak}:{this.state.them.winstreak}
+                {this.state.me.winStreak}:{this.state.them.winStreak}
               </div>
             </div>
 

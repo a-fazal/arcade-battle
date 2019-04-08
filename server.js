@@ -109,6 +109,7 @@ app.post("/user/register", (req, res) => {
   user.save().then((result) => {
     res.send(result)
   }, (error) => {
+    console.log(error)
     res.status(500).send(error);
   })
 })
@@ -118,6 +119,8 @@ app.post("/user/login", (req, res) => {
   const password = req.body.password;
   User.findByUsernamePassword(username, password).then((user) => {
     if (!user|| user.isBanned){
+      console.log(user)
+      console.log('hello')
       res.send("Invalid username or password.");
     } else {
       req.session.user = user._id;
@@ -128,6 +131,7 @@ app.post("/user/login", (req, res) => {
       }
     }
   }).catch((error) => {
+    console.log(error)
     res.status(500).send(error);
   })
 })
@@ -139,6 +143,7 @@ app.get("/user", (req, res) => {
   } else {
     User.findById(id)
       .then((user) => {
+        console.log(user)
         res.send(user);
       }).catch((err) => {
         res.status(500).send(err);
@@ -147,12 +152,12 @@ app.get("/user", (req, res) => {
 })
 
 
-app.get("/user/:id", (req, res) => {
-  const id = req.params.id;
+app.get("/user/:username", (req, res) => {
+  const id = req.params.username;
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
-    User.findById(id)
+    User.findOne({username: username})
       .then((user) => {
         res.send(user);
       }).catch((err) => {
@@ -214,22 +219,14 @@ app.patch("/user/:id/updatepass", (req, res) => {
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
-    const {confirmPass, newPass} = req.body;
-    if (newPass !== confirmPass) {
-      res.status(400).send({msg: "Confirm your new password again."})
-    } else {
-        const user = User.findById(id, function(err, user) {
-          if (err) {
-            res.status(500).send(err);
-          }
-          user.password = newPass;
-          user.save().then((user) => {
-            res.send(user);
-          })
-        }).catch((err) => {
-          res.status(500).send(err);
-        })
-      }
+    User.findByIdAndUpdate(
+      id,
+      {password: req.body.newPass}
+    ).then((user) => {
+      res.send(user);
+    }).catch((err) => {
+      res.status(500).send(err);
+    })
   }
 })
 
@@ -238,110 +235,11 @@ app.patch("/user/:id/updatename", (req, res) => {
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
-    User.findById(id).then((user) => {
-      if (!user) {
-        res.status(404).send();
-      } else {
-        const currName = user.username;
-        const {newName} = req.body;
-        
-        // update all games involving the user
-        CompleteGame.find()
-          .or([{ playerOne: currName }, { playerTwo: currName }, { winner: currName }])
-          .exec((err, games) => {
-            if (err) {
-              throw new Error(err);
-            } else {
-              games.forEach(g => {
-                if(g.playerOne === currName){
-                  g.playerOne = newName;
-                } if(g.playerTwo === currName){
-                  g.playerTwo = newName;
-                } if(g.winner === currName){
-                  g.winner = newName;
-                }
-                g.save()
-              })
-            }
-          });
-        
-        // update the user
-        user.username = newName;       
-        user.save().then((user) => {
-          res.send(user);
-        })
-      }
-    }).catch((err) => {
-      res.status(500).send(err);
-    })
-  }
-})
-
-app.patch("/currentuser/updatepass", (req, res) => {
-  const id = req.session.user;
-  if (!ObjectID.isValid(id)) {
-    res.status(404).send();
-  } else {
-    User.findById(id).then((user) => {
-      const {oldPass, confirmPass, newPass} = req.body;
-      if (newPass !== confirmPass) {
-        res.status(400).send({msg: "Confirm your new password again."})
-      } else {
-        User.findByUsernamePassword(user.username, oldPass).then((user) => {
-          if(!user)  {
-            res.status(400).send({msg: "Your old password doesn't match."});
-          } else {
-            user.password = newPass;
-            user.save().then((user) => {
-              res.send(user);
-            })
-          }
-        })
-      }
-    }).catch((err) => {
-      res.status(500).send(err);
-    })
-  }
-})
-
-app.patch("/currentuser/updatename", (req, res) => {
-  const id = req.session.user;
-  if (!ObjectID.isValid(id)) {
-    res.status(404).send();
-  } else {
-    User.findById(id).then((user) => {
-      if (!user) {
-        res.status(404).send();
-      } else {
-        const currName = user.username;
-        const {newName} = req.body;
-        
-        // update all games involving the user
-        CompleteGame.find()
-          .or([{ playerOne: currName }, { playerTwo: currName }, { winner: currName }])
-          .exec((err, games) => {
-            if (err) {
-              throw new Error(err);
-            } else {
-              games.forEach(g => {
-                if(g.playerOne === currName){
-                  g.playerOne = newName;
-                } if(g.playerTwo === currName){
-                  g.playerTwo = newName;
-                } if(g.winner === currName){
-                  g.winner = newName;
-                }
-                g.save()
-              })
-            }
-          });
-        
-        // update the user
-        user.username = newName;       
-        user.save().then((user) => {
-          res.send(user);
-        })
-      }
+    User.findByIdAndUpdate(
+      id,
+      {username: req.body.newName}
+    ).then((user) => {
+      res.send(user);
     }).catch((err) => {
       res.status(500).send(err);
     })
@@ -561,6 +459,65 @@ app.get("/currentuser/stats", (req, res) => {
       })
 })
 
+
+app.get("/userbyname/:name/stats", (req, res) => {
+    const name = req.params.name
+
+
+        CompleteGame.find().or([{ playerOne: name }, { playerTwo: name }]).sort({ endTime: 'ascending' }).exec().then((games) => {
+
+            let timePlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let gamesPlayed = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+            let winStreak = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0,
+              "Overall": 0
+            }
+            let winPercent = {
+              "Tic-Tac-Toe": [],
+              "Checkers": []
+            }
+
+            // used to calculate historic win percentages
+            let winCount = {
+              "Tic-Tac-Toe": 0,
+              "Checkers": 0
+            }
+
+            let i = 0
+            while (i < games.length) {
+              if (games[i].winner === name) {
+                winStreak[games[i].game] += 1
+                winStreak["Overall"] += 1
+                winCount[games[i].game] += 1
+              } else {
+                winStreak[games[i].game] = 0
+                winStreak["Overall"] = 0
+              }
+              gamesPlayed[games[i].game] += 1
+              timePlayed[games[i].game] += Math.round((new Date(games[i].endTime).getTime() - new Date(games[i].startTime).getTime()))
+              winPercent[games[i].game].push(winCount[games[i].game] / gamesPlayed[games[i].game])
+              i++;
+            }
+
+            winPercent["Tic-Tac-Toe"] = winPercent["Tic-Tac-Toe"].slice(0, WIN_PERCENT_POINTS)
+            winPercent["Checkers"] = winPercent["Checkers"].slice(0, WIN_PERCENT_POINTS)
+
+            res.send({ username: name, timePlayed, gamesPlayed, winStreak, winPercent })
+          }).catch((err) => {
+            console.log(err)
+            res.status(500).send(err);
+      })
+
+})
+
+
 app.get('/currentuser/info', (req, res) => {
 
   // TODO: get the currently logged in user's id
@@ -590,6 +547,7 @@ app.get("/currentuser/winner", (req, res) => {
       CompleteGame.find({ winner: user.username })
         .sort({ endTime: 'ascending' })
         .exec((err, games) => {
+          console.log(games)
           res.send(games)
         })
     })
@@ -647,6 +605,7 @@ app.post('/completegame', (req, res) => {
     "game": req.body.game
   })
   completegame.save().then((completegame) => {
+    console.log(completegame)
     res.send(completegame)
   }).catch((error) => {
     res.status(400).send(error)
@@ -658,6 +617,7 @@ app.post('/completegame', (req, res) => {
 app.delete('/currentgame/:id', (req, res) => {
 	// Add code here
 	const id = req.params.id
+  console.log(id)
 	if (!ObjectID.isValid(id)) {
 		res.status(404).send()
 	}
