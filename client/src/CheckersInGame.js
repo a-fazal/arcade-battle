@@ -17,22 +17,23 @@ constructor(props) {
     numClick: 0,
     clickedPiece: null
    }
-   this.onItemClick = this.onItemClick.bind(this);
+   this.onItemClickCheckers = this.onItemClickCheckers.bind(this);
    this.checkForOpponentCheckers = this.checkForOpponentCheckers.bind(this);
 }
 
-componentDidMountCheckers() {
+componentDidMount() {
   this.props.setGameHeader(true);
-  this.checkForOpponent();
+  this.checkForOpponentCheckers();
 }
 
-componentWillUnmountCheckers() {
+componentWillUnmount() {
   this.props.setGameHeader(false);
 }
 
 checkForOpponentCheckers() {
   // Poll the server for an opponent
   // BACK END
+  console.log('helloo')
   let data = null;
   if (delay === 0) {
     data = {
@@ -55,22 +56,22 @@ checkForOpponentCheckers() {
   if (data) {
     this.setState({me: data.me, them: data.them});
     for (let i = 0; i < 8; i++){
-        for (let j = 0; j = < 8; j++){
+        for (let j = 0; j <= 8; j++){
             if (i === 0 || i === 2) {
                 if (j % 2 === 1){
-                    this.state.board[i][j] = them.colour;
+                    this.state.board[i][j] = this.state.them.colour;
                 }
             } else if (i === 1) {
                 if (j % 2 === 0) {
-                    this.state.board[i][j] = them.colour;
+                    this.state.board[i][j] = this.state.them.colour;
                 }
             } else if (i === 5 || i === 7) {
                 if (j % 2 === 0) {
-                    this.state.board[i][j] = me.colour;
+                    this.state.board[i][j] = this.state.me.colour;
                 }
             } else if (i === 6) {
                 if (j % 2 === 1){
-                    this.state.board[i][j] = me.colour;
+                    this.state.board[i][j] = this.state.me.colour;
                 }
             }
         }
@@ -78,17 +79,17 @@ checkForOpponentCheckers() {
   }
   else {
     // if the server can't find an opponent, try again in 1 second
-    setTimeout(this.checkForOpponent, 1000);
+    setTimeout(this.checkForOpponentCheckers, 1000);
   }
 }
 
 /* TO BE COMPLETED */
 onItemClickCheckers(e) {
     e.preventDefault();
-    rowInput = parseInt(e.currentTarget.id[3]);
-    colInput = parseInt(e.currentTarget.id[7]);
+    let rowInput = parseInt(e.currentTarget.id[3]);
+    let colInput = parseInt(e.currentTarget.id[7]);
     if (this.state.numClick === 0){
-        if (this.state.board[rowInput][colInput] === me.colour) {
+        if (this.state.board[rowInput][colInput] === this.state.me.colour) {
             this.setState({clickedPiece: {
                 row: rowInput,
                 col: colInput
@@ -96,16 +97,18 @@ onItemClickCheckers(e) {
             });
         }
     } else {
-        if (this.state.board[rowInput][colInput] !== me.colour && this.state.board[rowInput][colInput] !== them.colour) {
+        if (this.state.board[rowInput][colInput] !== this.state.me.colour && this.state.board[rowInput][colInput] !== this.state.them.colour) {
             //  User attempted to take opposing player's piece
-            if (Math.abs(rowInput - this.state.clickedPiece[row]) === 2) {
+            if (Math.abs(rowInput - this.state.clickedPiece[rowInput]) === 2) {
                 // User moved left
-                if (rowInput - this.state.clickedPiece[row] < 0) {
+                if (rowInput - this.state.clickedPiece[rowInput] < 0) {
                     // Check that there existed an opposing piece
-                    if (this.state.board[rowInput - 1][colInput - 1])
+                    if (this.state.board[rowInput - 1][colInput - 1]) {
+
+                    }
                 // User moved right
                 } else {
-                    
+
                 }
             }
         }
@@ -116,7 +119,7 @@ onItemClickCheckers(e) {
   render() {
     if (this.state.them) {
       return (
-        <div id=inGame>
+        <div id="inGame">
         	<div class="inGameHeader">
         		<div id="myStats" className="player-stats">
         			<div className="player-identity">
@@ -318,7 +321,7 @@ onItemClickCheckers(e) {
                         }
         				</td>
 
-        				<td id="row2col3" className="blackboard" onClick={this.onItemClickCheckers}> 
+        				<td id="row2col3" className="blackboard" onClick={this.onItemClickCheckers}>
                         {this.state.board[2][3] === 'red' &&
                         <i className="fas fa-circle redcheckerspiece"></i>
                         }
@@ -466,7 +469,7 @@ onItemClickCheckers(e) {
                         }
         				</td>
 
-        				<td id="row4col3" className="blackboard" onClick={this.onItemClickCheckers}> 
+        				<td id="row4col3" className="blackboard" onClick={this.onItemClickCheckers}>
                         {this.state.board[4][3] === 'red' &&
                         <i className="fas fa-circle redcheckerspiece"></i>
                         }
@@ -614,7 +617,7 @@ onItemClickCheckers(e) {
                         }
         				</td>
 
-        				<td id="row6col3" className="blackboard" onClick={this.onItemClickCheckers}> 
+        				<td id="row6col3" className="blackboard" onClick={this.onItemClickCheckers}>
                         {this.state.board[6][3] === 'red' &&
                         <i className="fas fa-circle redcheckerspiece"></i>
                         }
