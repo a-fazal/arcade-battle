@@ -37,11 +37,14 @@ class Login extends Component {
       }).then((res) => {
         if (res.status === 500) {
           alert("Incorrect username or password.");
-        } else if (res.status === 300) {
-          this.props.setUser("admin");
+        } else {
+          return res.json();
+        }
+      }).then((user) => {
+        this.props.setUser(user.username)
+        if (user.role == "admin") {
           this.props.history.push("/admin");
-        } else if (res.status === 200) {
-          this.props.setUser(res.username)
+        } else {
           this.props.history.push("/home");
         }
       }).catch((error) => {
