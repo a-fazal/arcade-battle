@@ -21,10 +21,25 @@ const CompleteGameSchema = new mongoose.Schema({
 	winner: {
 		type: String,
 	},
-  game: {
-    type: String,
+    game: {
+        type: String,
 	}
-}, { collection : 'CompleteGame' });
+}, { collection : 'CompleteGame', toObject: {virtuals:true}, toJSON: {virtuals:true} });
+
+
+CompleteGameSchema.virtual('userOne', {
+  ref: 'User',
+  localField: 'playerOne',
+  foreignField: 'username',
+  justOne: true // for many-to-1 relationships
+});
+
+CompleteGameSchema.virtual('userTwo', {
+  ref: 'User',
+  localField: 'playerTwo',
+  foreignField: 'username',
+  justOne: true // for many-to-1 relationships
+});
 
 const CompleteGame = mongoose.model('CompleteGame', CompleteGameSchema)
 

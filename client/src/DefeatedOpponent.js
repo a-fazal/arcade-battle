@@ -6,7 +6,7 @@ class DefeatedOpponent extends Component {
     const opponent = this.props.opponent
     return (
       <div className="trophy">
-        <Link to={"/user/" + opponent.id}>
+        <Link to={"/user/" + opponent.opponentId}>
           <div className="trophy-plaque">
             {opponent.wasChamp
               ? <div className="trophy-crown"></div>
