@@ -15,6 +15,7 @@ class Profile extends Component {
     this.changeMyName = this.changeMyName.bind(this);
     this.changeOtherName = this.changeOtherName.bind(this);
     this.fetchUserInfo = this.fetchUserInfo.bind(this);
+    this.goBack = this.goBack.bind(this);
   }
 
   componentDidMount(){
@@ -192,6 +193,11 @@ class Profile extends Component {
       alert('Not a valid name');
     }
   }
+  
+  goBack(e) {
+    e.preventDefault()
+    this.props.history.goBack();
+  }
 
   render() {
     const data = {username: this.state.username, uri: this.state.uri};
@@ -200,10 +206,15 @@ class Profile extends Component {
     }
     return (
       <div className="container">
-      <div className="row">
+        <div className="row">
+          {this.props.user === "admin" &&
+            <button className="profile-button" id="back-btn" onClick={this.goBack}>
+              <i className="fas fa-chevron-left" />BACK
+            </button>
+          }
 	      	<div className="col-sm">
 	      		<div className="username-container">
-	      			<span className="green" id="userName"><h2>{data.username}</h2></span>
+	      			<span className="green" id="userName"><h2 className="text-center">{data.username}</h2></span>
 	      		</div>
 	      	</div>
       	</div>
@@ -239,9 +250,9 @@ class Profile extends Component {
       			Old password<br/>
       			{this.props.user !== "admin" &&
               <>
-      			<input type="text" className="form-control" id="oldPass" placeholder="Enter old password"/>
-      			<br/>
-      			</>
+              <input type="text" className="form-control" id="oldPass" placeholder="Enter old password"/>
+              <br/>
+              </>
             }
       			New password<br/>
       			<input type="text" className="form-control" id="newPass" placeholder="Enter new password" name="newPass"/>

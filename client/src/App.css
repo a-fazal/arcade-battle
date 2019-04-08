@@ -208,7 +208,7 @@ body {
     padding: 20px;
 }
 
-#userProfile .profile-button {
+.profile-button {
     position: absolute;
     background-color: #111111;
     height: 40px;
@@ -217,7 +217,8 @@ body {
     border-radius: 8px;
 }
 
-#userProfile #back-btn{
+#back-btn{
+    z-index:2;
 	top: 40px;
 	width: 80px;
     left: 100px;
