@@ -36,7 +36,7 @@ class Login extends Component {
         }
       }).then((res) => {
         if (res.status === 500) {
-          alert("Incorrect username or password.");
+          throw new Error("Incorrect username or password.");
         } else {
           return res.json();
         }
