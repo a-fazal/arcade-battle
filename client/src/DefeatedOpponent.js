@@ -16,7 +16,7 @@ class DefeatedOpponent extends Component {
           </div>
           <div className="trophy-description">
             <div className="text-center">{opponent.playerOne == this.props.user && opponent.playerTwo} {opponent.playerTwo == this.props.user && opponent.playerOne}
-      <br />{opponent.endTime}<br />{"Beaten in: " + opponent.game}</div>
+      <br />{new Date(opponent.endTime).toLocaleString()}<br />Last Beaten in:<br />{opponent.game}</div>
           </div>
         </Link>
       </div>
