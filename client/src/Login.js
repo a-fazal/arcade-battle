@@ -34,17 +34,15 @@ class Login extends Component {
         headers: {
           "Content-Type": "application/json"
         }
-      }).then((user) => {
-        if (typeof user === 'string') {
-          alert(user);
-        } else {
-          if (user.status === 300) {
-            this.props.setUser("admin");
-            this.props.history.push("/admin");
-          } else if (user.status === 200) {
-            this.props.setUser(data.username)
-            this.props.history.push("/home");
-          }
+      }).then((res) => {
+        if (res.status === 500) {
+          alert("Incorrect username or password.");
+        } else if (res.status === 300) {
+          this.props.setUser("admin");
+          this.props.history.push("/admin");
+        } else if (res.status === 200) {
+          this.props.setUser(res.username)
+          this.props.history.push("/home");
         }
       }).catch((error) => {
         alert(error);
