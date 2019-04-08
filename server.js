@@ -238,12 +238,39 @@ app.patch("/user/:id/updatename", (req, res) => {
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
-    User.findByIdAndUpdate(
-      id,
-      {username: req.body.newName},
-      { new: true }
-    ).then((user) => {
-      res.send(user);
+    User.findById(id).then((user) => {
+      if (!user) {
+        res.status(404).send();
+      } else {
+        const currName = user.username;
+        const {newName} = req.body;
+        
+        // update all games involving the user
+        CompleteGame.find()
+          .or([{ playerOne: currName }, { playerTwo: currName }, { winner: currName }])
+          .exec((err, games) => {
+            if (err) {
+              throw new Error(err);
+            } else {
+              games.forEach(g => {
+                if(g.playerOne === currName){
+                  g.playerOne = newName;
+                } if(g.playerTwo === currName){
+                  g.playerTwo = newName;
+                } if(g.winner === currName){
+                  g.winner = newName;
+                }
+                g.save()
+              })
+            }
+          });
+        
+        // update the user
+        user.username = newName;       
+        user.save().then((user) => {
+          res.send(user);
+        })
+      }
     }).catch((err) => {
       res.status(500).send(err);
     })
@@ -282,12 +309,39 @@ app.patch("/currentuser/updatename", (req, res) => {
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   } else {
-    User.findByIdAndUpdate(
-      id,
-      {username: req.body.newName},
-      { new: true }
-    ).then((user) => {
-      res.send(user);
+    User.findById(id).then((user) => {
+      if (!user) {
+        res.status(404).send();
+      } else {
+        const currName = user.username;
+        const {newName} = req.body;
+        
+        // update all games involving the user
+        CompleteGame.find()
+          .or([{ playerOne: currName }, { playerTwo: currName }, { winner: currName }])
+          .exec((err, games) => {
+            if (err) {
+              throw new Error(err);
+            } else {
+              games.forEach(g => {
+                if(g.playerOne === currName){
+                  g.playerOne = newName;
+                } if(g.playerTwo === currName){
+                  g.playerTwo = newName;
+                } if(g.winner === currName){
+                  g.winner = newName;
+                }
+                g.save()
+              })
+            }
+          });
+        
+        // update the user
+        user.username = newName;       
+        user.save().then((user) => {
+          res.send(user);
+        })
+      }
     }).catch((err) => {
       res.status(500).send(err);
     })

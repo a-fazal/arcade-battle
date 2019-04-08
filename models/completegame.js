@@ -9,9 +9,9 @@ const CompleteGameSchema = new mongoose.Schema({
 	startTime: {
 		type: String,
 	},
-  endTime: {
-    type: String,
-  },
+    endTime: {
+        type: String,
+    },
 	playerOne: {
 		type: String,
 	},
