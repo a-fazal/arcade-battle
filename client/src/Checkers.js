@@ -107,7 +107,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.checkersStats.hoursPlayed}</h1></span>
+                <span className="green"><h1>{data.checkersStats.hoursPlayed.toFixed(1)}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -119,7 +119,7 @@ class Checkers extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">{data.checkersStats.winPercent.slice(-1).pop() + "%"}</span> <br />
+                <span className="green">{data.checkersStats.winPercent.length == 0 ? "0.00%" : Number(data.checkersStats.winPercent.slice(-1).pop()).toFixed(2) + "%"}</span> <br />
               </span>
               Win Percentage
             </span>
@@ -127,7 +127,7 @@ class Checkers extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.checkersStats.gamesPlayed}</h1></span> <br />
+                <span className="green"><h1>{data.checkersStats.gamesPlayed.toFixed(0)}</h1></span> <br />
               </span>
               Games Played
             </span>
