@@ -109,7 +109,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.tictactoeStats.hoursPlayed}</h1></span>
+                <span className="green"><h1>{data.tictactoeStats.hoursPlayed.toFixed(1)}</h1></span>
                 <br />
               </span>
               Hours Played
@@ -121,7 +121,7 @@ class TicTacToe extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">{data.tictactoeStats.winPercent.slice(-1).pop() + "%"}</span> <br />
+                <span className="green">{data.tictactoeStats.winPercent.length == 0 ? "0.00%" : Number(data.tictactoeStats.winPercent.slice(-1).pop()).toFixed(2) + "%"}</span> <br />
               </span>
               Win Percentage
             </span>
@@ -129,7 +129,7 @@ class TicTacToe extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.tictactoeStats.gamesPlayed}</h1></span> <br />
+                <span className="green"><h1>{data.tictactoeStats.gamesPlayed.toFixed(0)}</h1></span> <br />
               </span>
               Games Played
             </span>

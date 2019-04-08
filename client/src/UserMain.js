@@ -132,7 +132,7 @@ class UserMain extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">{this.state.hoursPlayed}</span>
+                <span className="green">{data.hoursPlayed.toFixed(1)}</span>
                 <br />
               </span>
               Hours Played
@@ -141,7 +141,7 @@ class UserMain extends Component {
           <div className="col-sm-4">
             <span>
               <span className="stats">
-                <span className="green"><h1>{data.winstreak}</h1></span> <br />
+                <span className="green"><h1>{data.winstreak.toFixed(0)}</h1></span> <br />
               </span>
               Game Winning Streak
             </span>
@@ -152,7 +152,7 @@ class UserMain extends Component {
             </div>
             <span>
               <span className="stats">
-                <span className="green">{this.state.gamesPlayed}</span> <br />
+                <span className="green">{data.gamesPlayed.toFixed(0)}</span> <br />
               </span>
               Games Played
             </span>

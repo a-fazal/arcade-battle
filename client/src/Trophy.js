@@ -24,7 +24,6 @@ class Trophy extends Component {
         return response.json();
       }
     }).then((json) => {
-      console.log(json)
       this.setState({ defeated: json });
     }).catch((err) => {
       alert(err.message)
@@ -33,7 +32,6 @@ class Trophy extends Component {
 
   render() {
     const data = this.state.defeated;
-    console.log(data)
     if (!data) {
       return (<div>LOADING</div>);
     }

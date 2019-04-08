@@ -338,6 +338,7 @@ app.get("/user/:id/stats", (req, res) => {
           .sort({ endTime: 'ascending' })
           .exec((err, games) => {
             if (err) {
+              console.log("first")
               return res.status(500).send(err);
             }
             let timePlayed = {
@@ -387,6 +388,7 @@ app.get("/user/:id/stats", (req, res) => {
           })
       })
       .catch((err) => {
+        console.log(err)
         res.status(500).send(err);
       })
   }
@@ -546,9 +548,23 @@ app.get("/currentuser/winner", (req, res) => {
     .then(function (user) {
       CompleteGame.find({ winner: user.username })
         .sort({ endTime: 'ascending' })
+        .populate('userOne')
+        .populate('userTwo')
         .exec((err, games) => {
-          console.log(games)
-          res.send(games)
+          const idLabelled = games.map(g => { return ({...g._doc, opponentId: g.playerOne === user.username ? g.userTwo._id : g.userOne._id }); })
+          const opponentMap = {}
+          idLabelled.forEach(elem => {
+            if (!(elem.opponentId in opponentMap) || new Date(elem.endTime) > new Date(opponentMap[elem.opponentId].endTime)){
+              opponentMap[elem.opponentId] = elem;
+            }
+          })
+          const opponentList = []
+          for (let key in opponentMap) {
+            opponentList.push(opponentMap[key])
+          }
+          res.send(opponentList.sort(function(a, b) {
+            return new Date(b.endTime) - new Date(a.endTime);
+          }))
         })
     })
     .catch((err) => {
